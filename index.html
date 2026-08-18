@@ -128,12 +128,13 @@
     .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
     .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
 
-    /* Hidden Off-screen Container */
+    /* PDF Wrapper positioned off-screen normally */
     #pdf-template-wrapper {
       position: absolute;
       left: -9999px;
       top: 0;
       width: 750px;
+      background: #ffffff;
     }
 
     /* Standardized Strict PDF Styling */
@@ -173,7 +174,6 @@
       border-bottom: 1px solid #333333;
     }
 
-    /* Balanced Font Weights */
     .pdf-label {
       font-weight: 600;
       font-size: 11px !important;
@@ -199,6 +199,7 @@
       font-size: 11px !important; 
       color: #000000;
       text-transform: uppercase;
+      page-break-inside: avoid;
     }
     
     .pdf-equip-block { 
@@ -206,6 +207,7 @@
       padding: 6px 8px; 
       margin-bottom: 6px; 
       background: #fafafa; 
+      page-break-inside: avoid;
     }
     
     .pdf-table { 
@@ -222,6 +224,10 @@
       font-size: 11px !important; 
       color: #111111;
       height: 24px;
+    }
+
+    .pdf-table tr {
+      page-break-inside: avoid;
     }
 
     .pdf-table th { 
@@ -325,7 +331,7 @@
     <table class="pdf-table">
       <thead>
         <tr>
-          <th style="width: 25%;">PARTS</th>
+          <th style="width: 25%;">PART #'S</th>
           <th style="width: 45%;">DESCRIPTION</th>
           <th style="width: 12%;">QTY</th>
           <th style="width: 18%;">PRICE</th>
@@ -347,7 +353,7 @@
       <tbody id="pdf-labour-rows"></tbody>
     </table>
 
-    <table class="pdf-layout-table" style="margin-top: 8px;">
+    <table class="pdf-layout-table" style="margin-top: 8px; page-break-inside: avoid;">
       <tr>
         <td>
           <span class="pdf-label">ADDITIONAL COMMENTS:</span>
@@ -356,7 +362,7 @@
       </tr>
     </table>
 
-    <table class="pdf-layout-table" style="margin-top: 8px; border-top: 1px solid #333333; padding-top: 6px;">
+    <table class="pdf-layout-table" style="margin-top: 8px; border-top: 1px solid #333333; padding-top: 6px; page-break-inside: avoid;">
       <tr>
         <td style="width: 50%;"><span class="pdf-label">CUSTOMER ACCEPTED:</span> <span class="pdf-val">[ ] PLEASE CHECK IF ACCEPTED</span></td>
         <td style="width: 50%;"><span class="pdf-label">WORK COMPLETED:</span> <span class="pdf-val">[ ]</span></td>
@@ -441,36 +447,42 @@
   addLabourInput();
 
   function fillSampleData() {
-    document.getElementById('m-wo-num').value = '74982';
+    document.getElementById('m-wo-num').value = 'W0075009';
     document.getElementById('m-cust-num').value = '05362';
     document.getElementById('m-cust-name').value = 'Element Hotel';
-    document.getElementById('m-address').value = '6170 HWY 7, Vaughan';
-    document.getElementById('m-phone').value = '905-555-0199';
-    document.getElementById('m-fax').value = '905-555-0100';
-    document.getElementById('m-email').value = 'service@elementhotel.com';
+    document.getElementById('m-address').value = '479 Roncesvalles Avenue';
+    document.getElementById('m-phone').value = '416-889-4420';
+    document.getElementById('m-fax').value = '';
+    document.getElementById('m-email').value = '';
 
     document.getElementById('m-equipment-list').innerHTML = '';
     addEquipmentInput();
     document.querySelectorAll('.inp-equip-make')[0].value = 'Maytag';
-    document.querySelectorAll('.inp-equip-model')[0].value = 'MHN33PFCWW2';
-    document.querySelectorAll('.inp-equip-serial')[0].value = 'CB0300099';
-    document.querySelectorAll('.inp-equip-desc')[0].value = 'The washer needs a new membrane switch';
+    document.querySelectorAll('.inp-equip-model')[0].value = 'MAT14CSAWW1';
+    document.querySelectorAll('.inp-equip-serial')[0].value = 'C22560383';
+    document.querySelectorAll('.inp-equip-desc')[0].value = 'The washer needs a new motor and belt';
 
     document.getElementById('m-parts-list').innerHTML = '';
     addPartInput();
-    document.querySelectorAll('.inp-part-num')[0].value = 'W11455199';
-    document.querySelectorAll('.inp-part-desc')[0].value = 'Membrane switch';
+    document.querySelectorAll('.inp-part-num')[0].value = 'W10210383';
+    document.querySelectorAll('.inp-part-desc')[0].value = 'Drive Motor';
     document.querySelectorAll('.inp-part-qty')[0].value = '1';
-    document.querySelectorAll('.inp-part-price')[0].value = '50.00';
+    document.querySelectorAll('.inp-part-price')[0].value = '145.00';
+
+    addPartInput();
+    document.querySelectorAll('.inp-part-num')[1].value = 'W10006384';
+    document.querySelectorAll('.inp-part-desc')[1].value = 'Drive Belt';
+    document.querySelectorAll('.inp-part-qty')[1].value = '1';
+    document.querySelectorAll('.inp-part-price')[1].value = '28.50';
 
     document.getElementById('m-labour-list').innerHTML = '';
     addLabourInput();
     document.querySelectorAll('.inp-labour-code')[0].value = 'LAB-01';
-    document.querySelectorAll('.inp-labour-desc')[0].value = 'Onsite Service & Installation';
-    document.querySelectorAll('.inp-labour-hours')[0].value = '1';
-    document.querySelectorAll('.inp-labour-rate')[0].value = '50.00';
+    document.querySelectorAll('.inp-labour-desc')[0].value = 'Onsite Service';
+    document.querySelectorAll('.inp-labour-hours')[0].value = '1.5';
+    document.querySelectorAll('.inp-labour-rate')[0].value = '85.00';
 
-    document.getElementById('m-comments').value = 'Unit tested successfully post repair.';
+    document.getElementById('m-comments').value = 'Parts on order.';
     document.getElementById('m-tech').value = 'Carlos M.';
   }
 
@@ -620,10 +632,16 @@
     const wrapper = document.getElementById('pdf-template-wrapper');
     const element = document.getElementById('pdf-content');
 
+    // Make target visible at top-left of page for accurate canvas capture
     wrapper.style.left = '0px';
+    wrapper.style.top = '0px';
+    wrapper.style.position = 'fixed';
+    wrapper.style.zIndex = '99999';
+
+    const fullHeight = element.scrollHeight;
 
     const opt = {
-      margin:       0,
+      margin:       [0.2, 0.2, 0.2, 0.2],
       filename:     `Quotation_${document.getElementById('m-wo-num').value || 'Draft'}.pdf`,
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { 
@@ -631,16 +649,20 @@
         scrollX: 0, 
         scrollY: 0,
         windowWidth: 750,
+        height: fullHeight,
         useCORS: true,
         letterRendering: true
       },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     try {
       await html2pdf().set(opt).from(element).save();
     } finally {
       wrapper.style.left = '-9999px';
+      wrapper.style.position = 'absolute';
+      wrapper.style.zIndex = 'auto';
     }
   }
 </script>
