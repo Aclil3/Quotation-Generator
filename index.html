@@ -172,7 +172,7 @@
       border-bottom: 1px solid #333333;
     }
 
-    /* Balanced Font Weights to Fix Discrepancy */
+    /* Balanced Font Weights */
     .pdf-label {
       font-weight: 600;
       font-size: 11px !important;
@@ -323,7 +323,7 @@
         <tr>
           <th style="width: 25%;">PART #'S</th>
           <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%; text-align: right;">QTY</th>
+          <th style="width: 12%;">QTY</th>
           <th style="width: 18%; text-align: right;">PRICE</th>
         </tr>
       </thead>
@@ -336,7 +336,7 @@
         <tr>
           <th style="width: 25%;">LABOUR CHARGES</th>
           <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%; text-align: right;"># OF HOURS</th>
+          <th style="width: 12%;"># OF HOURS</th>
           <th style="width: 18%; text-align: right;">PRICE</th>
         </tr>
       </thead>
@@ -525,7 +525,7 @@
         <tr>
           <td>${partNums[i].value || ''}</td>
           <td>${partDescs[i].value || ''}</td>
-          <td class="text-right">${qty}</td>
+          <td>${qty}</td>
           <td class="text-right">$${price.toFixed(2)}</td>
         </tr>
       `;
@@ -545,7 +545,7 @@
         <tr>
           <td>${labourCodes[i].value || ''}</td>
           <td>${labourDescs[i].value || ''}</td>
-          <td class="text-right">${hrs}</td>
+          <td>${hrs}</td>
           <td class="text-right">$${rate.toFixed(2)}</td>
         </tr>
       `;
