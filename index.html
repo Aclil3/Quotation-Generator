@@ -144,7 +144,7 @@
       color: #111111;
       font-family: Arial, Helvetica, sans-serif !important;
       font-size: 11px !important;
-      line-height: 1.3;
+      line-height: 1.4;
       -webkit-text-size-adjust: 100%;
     }
 
@@ -166,6 +166,7 @@
       vertical-align: bottom;
       font-size: 11px !important;
       color: #111111;
+      min-height: 20px;
     }
 
     .pdf-line-cell {
@@ -185,6 +186,8 @@
       font-size: 11px !important;
       color: #222222;
       word-break: break-word;
+      display: inline-block;
+      min-height: 14px;
     }
 
     .pdf-section-head { 
@@ -214,10 +217,11 @@
 
     .pdf-table th, .pdf-table td { 
       border: 1px solid #333333; 
-      padding: 5px 6px; 
+      padding: 6px; 
       text-align: left !important; 
       font-size: 11px !important; 
       color: #111111;
+      height: 24px;
     }
 
     .pdf-table th { 
@@ -225,7 +229,6 @@
       font-weight: 600; 
       text-transform: uppercase; 
       font-size: 11px !important;
-      text-align: left !important;
     }
 
     .text-right { text-align: right !important; }
@@ -322,11 +325,10 @@
     <table class="pdf-table">
       <thead>
         <tr>
-          <style>#pdf-template-wrapper .pdf-table th, #pdf-template-wrapper .pdf-table td { text-align: left !important; }</style>
-          <th style="width: 25%; text-align: left !important;">PART #'S</th>
-          <th style="width: 45%; text-align: left !important;">DESCRIPTION</th>
-          <th style="width: 12%; text-align: left !important;">QTY</th>
-          <th style="width: 18%; text-align: left !important;">PRICE</th>
+          <th style="width: 25%;">PART #'S</th>
+          <th style="width: 45%;">DESCRIPTION</th>
+          <th style="width: 12%;">QTY</th>
+          <th style="width: 18%;">PRICE</th>
         </tr>
       </thead>
       <tbody id="pdf-parts-rows"></tbody>
@@ -336,10 +338,10 @@
     <table class="pdf-table">
       <thead>
         <tr>
-          <th style="width: 25%; text-align: left !important;">LABOUR CHARGES</th>
-          <th style="width: 45%; text-align: left !important;">DESCRIPTION</th>
-          <th style="width: 12%; text-align: left !important;"># OF HOURS</th>
-          <th style="width: 18%; text-align: left !important;">PRICE</th>
+          <th style="width: 25%;">LABOUR CHARGES</th>
+          <th style="width: 45%;">DESCRIPTION</th>
+          <th style="width: 12%;"># OF HOURS</th>
+          <th style="width: 18%;">PRICE</th>
         </tr>
       </thead>
       <tbody id="pdf-labour-rows"></tbody>
@@ -371,6 +373,13 @@
 
 <script>
   document.getElementById('m-date').valueAsDate = new Date();
+
+  function getSafeVal(id) {
+    const el = document.getElementById(id);
+    if (!el) return '\u00A0';
+    const val = el.value ? el.value.trim() : '';
+    return val !== '' ? val : '\u00A0';
+  }
 
   function addEquipmentInput() {
     const list = document.getElementById('m-equipment-list');
@@ -466,16 +475,16 @@
   }
 
   async function generatePDF() {
-    document.getElementById('pdf-date').innerText = document.getElementById('m-date').value || '';
-    document.getElementById('pdf-wo-num').innerText = document.getElementById('m-wo-num').value || '';
-    document.getElementById('pdf-cust-num').innerText = document.getElementById('m-cust-num').value || '';
-    document.getElementById('pdf-cust-name').innerText = document.getElementById('m-cust-name').value || '';
-    document.getElementById('pdf-address').innerText = document.getElementById('m-address').value || '';
-    document.getElementById('pdf-phone').innerText = document.getElementById('m-phone').value || '';
-    document.getElementById('pdf-fax').innerText = document.getElementById('m-fax').value || '';
-    document.getElementById('pdf-email').innerText = document.getElementById('m-email').value || '';
-    document.getElementById('pdf-comments').innerText = document.getElementById('m-comments').value || '';
-    document.getElementById('pdf-tech').innerText = document.getElementById('m-tech').value || '';
+    document.getElementById('pdf-date').innerText = getSafeVal('m-date');
+    document.getElementById('pdf-wo-num').innerText = getSafeVal('m-wo-num');
+    document.getElementById('pdf-cust-num').innerText = getSafeVal('m-cust-num');
+    document.getElementById('pdf-cust-name').innerText = getSafeVal('m-cust-name');
+    document.getElementById('pdf-address').innerText = getSafeVal('m-address');
+    document.getElementById('pdf-phone').innerText = getSafeVal('m-phone');
+    document.getElementById('pdf-fax').innerText = getSafeVal('m-fax');
+    document.getElementById('pdf-email').innerText = getSafeVal('m-email');
+    document.getElementById('pdf-comments').innerText = getSafeVal('m-comments');
+    document.getElementById('pdf-tech').innerText = getSafeVal('m-tech');
 
     const equipContainer = document.getElementById('pdf-equipment-container');
     equipContainer.innerHTML = '';
@@ -484,34 +493,57 @@
     const serials = document.querySelectorAll('.inp-equip-serial');
     const descs = document.querySelectorAll('.inp-equip-desc');
 
-    makes.forEach((_, i) => {
-      const block = document.createElement('div');
-      block.className = 'pdf-equip-block';
-      block.innerHTML = `
-        <table class="pdf-layout-table" style="margin-bottom:0;">
-          <tr>
-            <td style="width: 50%;" class="pdf-line-cell">
-              <span class="pdf-label">MAKE:</span> <span class="pdf-val">${makes[i].value || ''}</span>
-            </td>
-            <td style="width: 50%;" class="pdf-line-cell">
-              <span class="pdf-label">MODEL:</span> <span class="pdf-val">${models[i].value || ''}</span>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2" class="pdf-line-cell">
-              <span class="pdf-label">SERIAL #:</span> <span class="pdf-val">${serials[i].value || ''}</span>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2" style="padding-top: 4px;">
-              <span class="pdf-label">WORK REQUIRED:</span>
-              <div class="pdf-val" style="padding-left: 2px; margin-top: 2px;">${descs[i].value || ''}</div>
-            </td>
-          </tr>
-        </table>
-      `;
-      equipContainer.appendChild(block);
-    });
+    if (makes.length === 0) {
+      equipContainer.innerHTML = `
+        <div class="pdf-equip-block">
+          <table class="pdf-layout-table" style="margin-bottom:0;">
+            <tr>
+              <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MAKE:</span> <span class="pdf-val">&nbsp;</span></td>
+              <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MODEL:</span> <span class="pdf-val">&nbsp;</span></td>
+            </tr>
+            <tr>
+              <td colspan="2" class="pdf-line-cell"><span class="pdf-label">SERIAL #:</span> <span class="pdf-val">&nbsp;</span></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top: 4px;"><span class="pdf-label">WORK REQUIRED:</span> <div class="pdf-val" style="padding-left: 2px; margin-top: 2px;">&nbsp;</div></td>
+            </tr>
+          </table>
+        </div>`;
+    } else {
+      makes.forEach((_, i) => {
+        const makeVal = makes[i].value ? makes[i].value.trim() : '\u00A0';
+        const modelVal = models[i].value ? models[i].value.trim() : '\u00A0';
+        const serialVal = serials[i].value ? serials[i].value.trim() : '\u00A0';
+        const descVal = descs[i].value ? descs[i].value.trim() : '\u00A0';
+
+        const block = document.createElement('div');
+        block.className = 'pdf-equip-block';
+        block.innerHTML = `
+          <table class="pdf-layout-table" style="margin-bottom:0;">
+            <tr>
+              <td style="width: 50%;" class="pdf-line-cell">
+                <span class="pdf-label">MAKE:</span> <span class="pdf-val">${makeVal}</span>
+              </td>
+              <td style="width: 50%;" class="pdf-line-cell">
+                <span class="pdf-label">MODEL:</span> <span class="pdf-val">${modelVal}</span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" class="pdf-line-cell">
+                <span class="pdf-label">SERIAL #:</span> <span class="pdf-val">${serialVal}</span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top: 4px;">
+                <span class="pdf-label">WORK REQUIRED:</span>
+                <div class="pdf-val" style="padding-left: 2px; margin-top: 2px;">${descVal}</div>
+              </td>
+            </tr>
+          </table>
+        `;
+        equipContainer.appendChild(block);
+      });
+    }
 
     const partsTbody = document.getElementById('pdf-parts-rows');
     partsTbody.innerHTML = '';
@@ -520,18 +552,34 @@
     const partQtys = document.querySelectorAll('.inp-part-qty');
     const partPrices = document.querySelectorAll('.inp-part-price');
 
-    partNums.forEach((_, i) => {
-      const qty = parseFloat(partQtys[i].value) || 0;
-      const price = parseFloat(partPrices[i].value) || 0;
-      partsTbody.innerHTML += `
+    if (partNums.length === 0) {
+      partsTbody.innerHTML = `
         <tr>
-          <td style="text-align: left !important;">${partNums[i].value || ''}</td>
-          <td style="text-align: left !important;">${partDescs[i].value || ''}</td>
-          <td style="text-align: left !important;">${qty}</td>
-          <td style="text-align: left !important;">$${price.toFixed(2)}</td>
-        </tr>
-      `;
-    });
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>`;
+    } else {
+      partNums.forEach((_, i) => {
+        const numVal = partNums[i].value ? partNums[i].value.trim() : '\u00A0';
+        const descVal = partDescs[i].value ? partDescs[i].value.trim() : '\u00A0';
+        const rawQty = partQtys[i].value;
+        const rawPrice = partPrices[i].value;
+        
+        const qtyVal = rawQty !== '' ? rawQty : '\u00A0';
+        const priceVal = rawPrice !== '' ? `$${parseFloat(rawPrice).toFixed(2)}` : '\u00A0';
+
+        partsTbody.innerHTML += `
+          <tr>
+            <td>${numVal}</td>
+            <td>${descVal}</td>
+            <td>${qtyVal}</td>
+            <td>${priceVal}</td>
+          </tr>
+        `;
+      });
+    }
 
     const labourTbody = document.getElementById('pdf-labour-rows');
     labourTbody.innerHTML = '';
@@ -540,18 +588,34 @@
     const labourHours = document.querySelectorAll('.inp-labour-hours');
     const labourRates = document.querySelectorAll('.inp-labour-rate');
 
-    labourCodes.forEach((_, i) => {
-      const hrs = parseFloat(labourHours[i].value) || 0;
-      const rate = parseFloat(labourRates[i].value) || 0;
-      labourTbody.innerHTML += `
+    if (labourCodes.length === 0) {
+      labourTbody.innerHTML = `
         <tr>
-          <td style="text-align: left !important;">${labourCodes[i].value || ''}</td>
-          <td style="text-align: left !important;">${labourDescs[i].value || ''}</td>
-          <td style="text-align: left !important;">${hrs}</td>
-          <td style="text-align: left !important;">$${rate.toFixed(2)}</td>
-        </tr>
-      `;
-    });
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>`;
+    } else {
+      labourCodes.forEach((_, i) => {
+        const codeVal = labourCodes[i].value ? labourCodes[i].value.trim() : '\u00A0';
+        const descVal = labourDescs[i].value ? labourDescs[i].value.trim() : '\u00A0';
+        const rawHrs = labourHours[i].value;
+        const rawRate = labourRates[i].value;
+
+        const hrsVal = rawHrs !== '' ? rawHrs : '\u00A0';
+        const rateVal = rawRate !== '' ? `$${parseFloat(rawRate).toFixed(2)}` : '\u00A0';
+
+        labourTbody.innerHTML += `
+          <tr>
+            <td>${codeVal}</td>
+            <td>${descVal}</td>
+            <td>${hrsVal}</td>
+            <td>${rateVal}</td>
+          </tr>
+        `;
+      });
+    }
 
     const wrapper = document.getElementById('pdf-template-wrapper');
     const element = document.getElementById('pdf-content');
