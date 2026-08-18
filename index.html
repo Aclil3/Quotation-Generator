@@ -128,7 +128,7 @@
     .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
     .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
 
-    /* PDF Template Wrapper */
+    /* Hidden Off-screen Container */
     #pdf-template-wrapper {
       position: absolute;
       left: -9999px;
@@ -136,58 +136,74 @@
       width: 800px;
     }
 
-    /* Uniform PDF Typography Styles */
+    /* Prevent Mobile WebKit Text Autosizing Across All Elements */
+    #pdf-content,
+    #pdf-content * {
+      -webkit-text-size-adjust: 100% !important;
+      -moz-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
+    }
+
+    /* Strict Fixed Page & Unit Styling */
     .pdf-page {
       width: 800px;
-      padding: 36px;
+      padding: 40px;
       background: #ffffff;
       color: #000000;
       font-family: Arial, Helvetica, sans-serif !important;
-      font-size: 12px;
+      font-size: 10pt;
       line-height: 1.3;
     }
 
     .pdf-header { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: flex-end; 
       border-bottom: 2px solid #000; 
       padding-bottom: 4px; 
       margin-bottom: 10px; 
     }
-    .pdf-header h1 { 
-      margin: 0; 
-      font-size: 20px; 
-      font-weight: bold; 
-      letter-spacing: normal; 
-    }
-    
+
     .pdf-layout-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 8px;
+      table-layout: fixed;
+      margin-bottom: 6px;
     }
+    
     .pdf-layout-table td {
-      padding: 5px 4px;
+      padding: 4px 2px;
       vertical-align: bottom;
-      font-size: 12px;
+      font-size: 10pt;
+      color: #000000;
     }
+
     .pdf-line-cell {
-      border-bottom: 1px solid #000;
+      border-bottom: 1px solid #000000;
     }
 
     .pdf-label {
       font-weight: bold;
-      font-size: 12px;
-      padding-right: 4px;
+      font-size: 10pt;
+      color: #000000;
     }
+
     .pdf-val {
-      font-size: 12px;
+      font-weight: normal;
+      font-size: 10pt;
+      color: #000000;
       word-break: break-word;
+    }
+
+    .pdf-section-head { 
+      background: #d1d5db; 
+      font-weight: bold; 
+      padding: 5px 6px; 
+      border: 1px solid #000000; 
+      margin-top: 10px; 
+      font-size: 10pt; 
+      color: #000000;
     }
     
     .pdf-equip-block { 
-      border: 1px solid #000; 
+      border: 1px solid #000000; 
       padding: 8px; 
       margin-bottom: 8px; 
       background: #fafafa; 
@@ -196,28 +212,25 @@
     .pdf-table { 
       width: 100%; 
       border-collapse: collapse; 
+      table-layout: fixed;
       margin-top: 4px; 
     }
+
     .pdf-table th, .pdf-table td { 
-      border: 1px solid #000; 
+      border: 1px solid #000000; 
       padding: 5px 6px; 
       text-align: left; 
-      font-size: 12px; 
+      font-size: 10pt; 
+      color: #000000;
     }
+
     .pdf-table th { 
       background: #e5e7eb; 
       font-weight: bold; 
       text-transform: uppercase; 
-      font-size: 12px;
+      font-size: 10pt;
     }
-    .pdf-section-head { 
-      background: #d1d5db; 
-      font-weight: bold; 
-      padding: 5px 6px; 
-      border: 1px solid #000; 
-      margin-top: 10px; 
-      font-size: 12px; 
-    }
+
     .text-right { text-align: right; }
   </style>
 </head>
@@ -261,10 +274,15 @@
 
 <div id="pdf-template-wrapper">
   <div class="pdf-page" id="pdf-content">
-    <div class="pdf-header">
-      <h1>SERVICE QUOTATION</h1>
-      <div><span class="pdf-label">DATE:</span> <span class="pdf-val" id="pdf-date"></span></div>
-    </div>
+    
+    <table class="pdf-layout-table pdf-header">
+      <tr>
+        <td style="font-size: 16pt; font-weight: bold; padding: 0;">SERVICE QUOTATION</td>
+        <td class="text-right" style="padding: 0;">
+          <span class="pdf-label">DATE:</span> <span class="pdf-val" id="pdf-date"></span>
+        </td>
+      </tr>
+    </table>
 
     <table class="pdf-layout-table">
       <tr>
@@ -329,24 +347,27 @@
       <tbody id="pdf-labour-rows"></tbody>
     </table>
 
-    <div style="margin-top:10px;">
-      <span class="pdf-label">ADDITIONAL COMMENTS:</span>
-      <div style="border-bottom:1px solid #000; min-height: 28px; margin-top:2px;" id="pdf-comments" class="pdf-val"></div>
-    </div>
+    <table class="pdf-layout-table" style="margin-top: 10px;">
+      <tr>
+        <td>
+          <span class="pdf-label">ADDITIONAL COMMENTS:</span>
+          <div style="border-bottom: 1px solid #000000; min-height: 24px; margin-top: 2px;" id="pdf-comments" class="pdf-val"></div>
+        </td>
+      </tr>
+    </table>
 
-    <div style="margin-top:12px; border-top:1px solid #000; padding-top:6px;">
-      <table class="pdf-layout-table">
-        <tr>
-          <td style="width: 50%;"><span class="pdf-label">CUSTOMER ACCEPTED:</span> [ ] PLEASE CHECK IF ACCEPTED</td>
-          <td style="width: 50%;"><span class="pdf-label">WORK COMPLETED:</span> [ ]</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="pdf-line-cell" style="padding-top: 8px;">
-            <span class="pdf-label">SERVICE TECH:</span> <span class="pdf-val" id="pdf-tech"></span>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <table class="pdf-layout-table" style="margin-top: 10px; border-top: 1px solid #000000; padding-top: 6px;">
+      <tr>
+        <td style="width: 50%;"><span class="pdf-label">CUSTOMER ACCEPTED:</span> [ ] PLEASE CHECK IF ACCEPTED</td>
+        <td style="width: 50%;"><span class="pdf-label">WORK COMPLETED:</span> [ ]</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="pdf-line-cell" style="padding-top: 6px;">
+          <span class="pdf-label">SERVICE TECH:</span> <span class="pdf-val" id="pdf-tech"></span>
+        </td>
+      </tr>
+    </table>
+
   </div>
 </div>
 
