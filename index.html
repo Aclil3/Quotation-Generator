@@ -128,7 +128,6 @@
     .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
     .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
 
-    /* PDF Wrapper positioned off-screen normally */
     #pdf-template-wrapper {
       position: absolute;
       left: -9999px;
@@ -137,7 +136,6 @@
       background: #ffffff;
     }
 
-    /* Standardized Strict PDF Styling */
     .pdf-page {
       width: 750px;
       padding: 30px;
@@ -188,6 +186,12 @@
       word-break: break-word;
       display: inline-block;
       min-height: 14px;
+    }
+
+    /* Bold rule for additional info comments */
+    #pdf-comments {
+      font-weight: bold !important;
+      color: #000000 !important;
     }
 
     .pdf-section-head { 
@@ -632,7 +636,6 @@
     const wrapper = document.getElementById('pdf-template-wrapper');
     const element = document.getElementById('pdf-content');
 
-    // Make target visible at top-left of page for accurate canvas capture
     wrapper.style.left = '0px';
     wrapper.style.top = '0px';
     wrapper.style.position = 'fixed';
