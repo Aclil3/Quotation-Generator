@@ -128,7 +128,7 @@
     .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
     .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
 
-    /* PDF Container Setup (Matches Letter Aspect Ratio at 800px) */
+    /* PDF Template Wrapper */
     #pdf-template-wrapper {
       position: absolute;
       left: -9999px;
@@ -136,14 +136,15 @@
       width: 800px;
     }
 
+    /* Uniform PDF Typography Styles */
     .pdf-page {
       width: 800px;
-      padding: 40px;
+      padding: 36px;
       background: #ffffff;
       color: #000000;
       font-family: Arial, Helvetica, sans-serif !important;
-      font-size: 13px;
-      line-height: 1.4;
+      font-size: 12px;
+      line-height: 1.3;
     }
 
     .pdf-header { 
@@ -151,12 +152,12 @@
       justify-content: space-between; 
       align-items: flex-end; 
       border-bottom: 2px solid #000; 
-      padding-bottom: 6px; 
-      margin-bottom: 12px; 
+      padding-bottom: 4px; 
+      margin-bottom: 10px; 
     }
     .pdf-header h1 { 
       margin: 0; 
-      font-size: 22px; 
+      font-size: 20px; 
       font-weight: bold; 
       letter-spacing: normal; 
     }
@@ -164,12 +165,12 @@
     .pdf-layout-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .pdf-layout-table td {
-      padding: 6px 4px;
+      padding: 5px 4px;
       vertical-align: bottom;
-      font-size: 13px;
+      font-size: 12px;
     }
     .pdf-line-cell {
       border-bottom: 1px solid #000;
@@ -177,27 +178,29 @@
 
     .pdf-label {
       font-weight: bold;
-      padding-right: 6px;
+      font-size: 12px;
+      padding-right: 4px;
     }
     .pdf-val {
+      font-size: 12px;
       word-break: break-word;
     }
     
     .pdf-equip-block { 
       border: 1px solid #000; 
-      padding: 10px; 
-      margin-bottom: 10px; 
+      padding: 8px; 
+      margin-bottom: 8px; 
       background: #fafafa; 
     }
     
     .pdf-table { 
       width: 100%; 
       border-collapse: collapse; 
-      margin-top: 6px; 
+      margin-top: 4px; 
     }
     .pdf-table th, .pdf-table td { 
       border: 1px solid #000; 
-      padding: 6px 8px; 
+      padding: 5px 6px; 
       text-align: left; 
       font-size: 12px; 
     }
@@ -210,10 +213,10 @@
     .pdf-section-head { 
       background: #d1d5db; 
       font-weight: bold; 
-      padding: 6px 8px; 
+      padding: 5px 6px; 
       border: 1px solid #000; 
-      margin-top: 14px; 
-      font-size: 13px; 
+      margin-top: 10px; 
+      font-size: 12px; 
     }
     .text-right { text-align: right; }
   </style>
@@ -260,7 +263,7 @@
   <div class="pdf-page" id="pdf-content">
     <div class="pdf-header">
       <h1>SERVICE QUOTATION</h1>
-      <div><strong>DATE:</strong> <span id="pdf-date"></span></div>
+      <div><span class="pdf-label">DATE:</span> <span class="pdf-val" id="pdf-date"></span></div>
     </div>
 
     <table class="pdf-layout-table">
@@ -298,7 +301,7 @@
     </table>
 
     <div class="pdf-section-head">EQUIPMENT & WORK REQUIRED</div>
-    <div id="pdf-equipment-container" style="margin-top: 6px;"></div>
+    <div id="pdf-equipment-container" style="margin-top: 4px;"></div>
 
     <div class="pdf-section-head">PARTS</div>
     <table class="pdf-table">
@@ -326,19 +329,19 @@
       <tbody id="pdf-labour-rows"></tbody>
     </table>
 
-    <div style="margin-top:14px;">
-      <strong>ADDITIONAL COMMENTS:</strong>
-      <div style="border-bottom:1px solid #000; min-height: 35px; margin-top:4px;" id="pdf-comments"></div>
+    <div style="margin-top:10px;">
+      <span class="pdf-label">ADDITIONAL COMMENTS:</span>
+      <div style="border-bottom:1px solid #000; min-height: 28px; margin-top:2px;" id="pdf-comments" class="pdf-val"></div>
     </div>
 
-    <div style="margin-top:16px; border-top:1px solid #000; padding-top:8px;">
+    <div style="margin-top:12px; border-top:1px solid #000; padding-top:6px;">
       <table class="pdf-layout-table">
         <tr>
-          <td style="width: 50%;"><strong>CUSTOMER ACCEPTED:</strong> [ ] PLEASE CHECK IF ACCEPTED</td>
-          <td style="width: 50%;"><strong>WORK COMPLETED:</strong> [ ]</td>
+          <td style="width: 50%;"><span class="pdf-label">CUSTOMER ACCEPTED:</span> [ ] PLEASE CHECK IF ACCEPTED</td>
+          <td style="width: 50%;"><span class="pdf-label">WORK COMPLETED:</span> [ ]</td>
         </tr>
         <tr>
-          <td colspan="2" class="pdf-line-cell" style="padding-top: 10px;">
+          <td colspan="2" class="pdf-line-cell" style="padding-top: 8px;">
             <span class="pdf-label">SERVICE TECH:</span> <span class="pdf-val" id="pdf-tech"></span>
           </td>
         </tr>
@@ -481,9 +484,9 @@
             </td>
           </tr>
           <tr>
-            <td colspan="2" style="padding-top: 6px;">
+            <td colspan="2" style="padding-top: 4px;">
               <span class="pdf-label">WORK REQUIRED:</span>
-              <div class="pdf-val" style="font-size: 12px; padding-left: 4px; margin-top: 2px;">${descs[i].value || ''}</div>
+              <div class="pdf-val" style="padding-left: 4px; margin-top: 2px;">${descs[i].value || ''}</div>
             </td>
           </tr>
         </table>
