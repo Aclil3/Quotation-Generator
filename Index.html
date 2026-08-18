@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Quotation Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #f3f4f6; margin: 0; padding: 12px; color: #111827; }
+    
+    .app-card { background: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
+    h2 { margin-top: 16px; margin-bottom: 8px; font-size: 16px; border-bottom: 2px solid #2563eb; padding-bottom: 4px; color: #1e40af; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: #374151; }
+    input, textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+    .row-2 { display: flex; gap: 8px; }
+    .row-2 > div { flex: 1; }
+    
+    .item-block { background: #f9fafb; border: 1px solid #e5e7eb; padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
+    .btn-remove { position: absolute; top: 6px; right: 6px; background: #ef4444; color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 10px; cursor: pointer; }
+    .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 8px; }
+    .btn-add { background: #e5e7eb; color: #1f2937; margin-bottom: 12px; }
+    .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
+    .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
+
+    /* Hidden Container for Rendering PDF without altering iOS viewport */
+    #pdf-template-wrapper {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 700px;
+      background: #ffffff;
+      z-index: -9999;
+    }
+
+    .pdf-page {
+      width: 700px;
+      padding: 20px;
+      background: #ffffff;
+      color: #000000;
+      font-family: Helvetica, Arial, sans-serif !important;
+      font-size: 11px;
+      line-height: 1.3;
+      letter-spacing: normal !important;
+      word-spacing: normal !important;
+    }
+
+    .pdf-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 8px; }
+    .pdf-header h1 { margin: 0; font-size: 18px; font-weight: bold; letter-spacing: normal; }
+    
+    .pdf-layout-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6px;
+    }
+    .pdf-layout-table td {
+      padding: 3px 4px;
+      vertical-align: bottom;
+      font-size: 11px;
+    }
+    .pdf-line-cell {
+      border-bottom: 1px solid #000;
+    }
+
+    .pdf-label {
+      font-weight: bold;
+      padding-right: 4px;
+    }
+    .pdf-val {
+      word-break: break-word;
+    }
+    
+    .pdf-equip-block { border: 1px solid #000; padding: 6px; margin-bottom: 6px; background: #fafafa; }
+    
+    .pdf-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+    .pdf-table th, .pdf-table td { border: 1px solid #000; padding: 4px 6px; text-align: left; font-size: 10px; }
+    .pdf-table th { 
+      background: #e5e7eb; 
+      font-weight: bold; 
+      text-transform: uppercase; 
+      font-size: 10px;
+    }
+    .pdf-section-head { background: #d1d5db; font-weight: bold; padding: 4px 6px; border: 1px solid #000; margin-top: 8px; font-size: 11px; }
+    .text-right { text-align: right; }
+  </style>
+</head>
+<body>
+
+<div class="app-card">
+  <h2 style="margin-top:0;">Service Quotation Entry</h2>
+  <button class="btn btn-secondary" onclick="fillSampleData()">⚡ Fill Sample Data</button>
+  
+  <div class="row-2">
+    <div class="form-group"><label>Date</label><input type="date" id="m-date"></div>
+    <div class="form-group"><label>Work Order #</label><input type="text" id="m-wo-num"></div>
+  </div>
+  <div class="form-group"><label>Customer #</label><input type="text" id="m-cust-num"></div>
+  <div class="form-group"><label>Customer Name</label><input type="text" id="m-cust-name"></div>
+  <div class="form-group"><label>Address</label><input type="text" id="m-address"></div>
+  <div class="row-2">
+    <div class="form-group"><label>Phone #</label><input type="tel" id="m-phone"></div>
+    <div class="form-group"><label>Fax #</label><input type="tel" id="m-fax"></div>
+  </div>
+  <div class="form-group"><label>Email</label><input type="email" id="m-email"></div>
+
+  <h2>Equipment Details</h2>
+  <div id="m-equipment-list"></div>
+  <button class="btn btn-add" onclick="addEquipmentInput()">+ Add Equipment</button>
+
+  <h2>Parts</h2>
+  <div id="m-parts-list"></div>
+  <button class="btn btn-add" onclick="addPartInput()">+ Add Part Row</button>
+
+  <h2>Labour Charges</h2>
+  <div id="m-labour-list"></div>
+  <button class="btn btn-add" onclick="addLabourInput()">+ Add Labour Row</button>
+
+  <h2>Additional Info</h2>
+  <div class="form-group"><label>Additional Comments</label><textarea id="m-comments" rows="2"></textarea></div>
+  <div class="form-group"><label>Service Tech</label><input type="text" id="m-tech"></div>
+
+  <button class="btn btn-primary" onclick="generatePDF()">Download PDF</button>
+</div>
+
+<div id="pdf-template-wrapper">
+  <div class="pdf-page" id="pdf-content">
+    <div class="pdf-header">
+      <h1>SERVICE QUOTATION</h1>
+      <div><strong>DATE:</strong> <span id="pdf-date"></span></div>
+    </div>
+
+    <table class="pdf-layout-table">
+      <tr>
+        <td colspan="2" class="pdf-line-cell">
+          <span class="pdf-label">WORK ORDER #:</span> <span class="pdf-val" id="pdf-wo-num"></span>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%;" class="pdf-line-cell">
+          <span class="pdf-label">CUSTOMER #:</span> <span class="pdf-val" id="pdf-cust-num"></span>
+        </td>
+        <td style="width: 50%;" class="pdf-line-cell">
+          <span class="pdf-label">CUSTOMER NAME:</span> <span class="pdf-val" id="pdf-cust-name"></span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="pdf-line-cell">
+          <span class="pdf-label">ADDRESS:</span> <span class="pdf-val" id="pdf-address"></span>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%;" class="pdf-line-cell">
+          <span class="pdf-label">PHONE #:</span> <span class="pdf-val" id="pdf-phone"></span>
+        </td>
+        <td style="width: 50%;" class="pdf-line-cell">
+          <span class="pdf-label">FAX #:</span> <span class="pdf-val" id="pdf-fax"></span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="pdf-line-cell">
+          <span class="pdf-label">EMAIL:</span> <span class="pdf-val" id="pdf-email"></span>
+        </td>
+      </tr>
+    </table>
+
+    <div class="pdf-section-head">EQUIPMENT & WORK REQUIRED</div>
+    <div id="pdf-equipment-container" style="margin-top: 4px;"></div>
+
+    <div class="pdf-section-head">PARTS</div>
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th style="width: 25%;">PART #'S</th>
+          <th style="width: 45%;">DESCRIPTION</th>
+          <th style="width: 12%; text-align: right;">QTY</th>
+          <th style="width: 18%; text-align: right;">PRICE</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-parts-rows"></tbody>
+    </table>
+
+    <div class="pdf-section-head">LABOUR CHARGES</div>
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th style="width: 25%;">LABOUR CHARGES</th>
+          <th style="width: 45%;">DESCRIPTION</th>
+          <th style="width: 12%; text-align: right;"># OF HOURS</th>
+          <th style="width: 18%; text-align: right;">PRICE</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-labour-rows"></tbody>
+    </table>
+
+    <div style="margin-top:10px;">
+      <strong>ADDITIONAL COMMENTS:</strong>
+      <div style="border-bottom:1px solid #000; min-height: 25px; margin-top:2px;" id="pdf-comments"></div>
+    </div>
+
+    <div style="margin-top:10px; border-top:1px solid #000; padding-top:6px;">
+      <table class="pdf-layout-table">
+        <tr>
+          <td style="width: 50%;"><strong>CUSTOMER ACCEPTED:</strong> [ ] PLEASE CHECK IF ACCEPTED</td>
+          <td style="width: 50%;"><strong>WORK COMPLETED:</strong> [ ]</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="pdf-line-cell" style="padding-top: 6px;">
+            <span class="pdf-label">SERVICE TECH:</span> <span class="pdf-val" id="pdf-tech"></span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('m-date').valueAsDate = new Date();
+
+  function addEquipmentInput() {
+    const list = document.getElementById('m-equipment-list');
+    const div = document.createElement('div');
+    div.className = 'item-block';
+    div.innerHTML = `
+      <button class="btn-remove" onclick="removeEquipmentRow(this)">X</button>
+      <div class="row-2">
+        <div class="form-group"><label>Make</label><input type="text" class="inp-equip-make"></div>
+        <div class="form-group"><label>Model</label><input type="text" class="inp-equip-model"></div>
+      </div>
+      <div class="form-group"><label>Serial #</label><input type="text" class="inp-equip-serial"></div>
+      <div class="form-group"><label>Description of Service Required</label><textarea class="inp-equip-desc" rows="2"></textarea></div>
+    `;
+    list.appendChild(div);
+  }
+
+  function removeEquipmentRow(btn) {
+    const list = document.getElementById('m-equipment-list');
+    if (list.children.length > 1) {
+      btn.parentElement.remove();
+    } else {
+      alert('At least one equipment block must remain.');
+    }
+  }
+
+  function addPartInput() {
+    const div = document.createElement('div');
+    div.className = 'item-block';
+    div.innerHTML = `
+      <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+      <div class="form-group"><label>Part #</label><input type="text" class="inp-part-num"></div>
+      <div class="form-group"><label>Description</label><input type="text" class="inp-part-desc"></div>
+      <div class="row-2">
+        <div class="form-group"><label>Qty</label><input type="number" class="inp-part-qty" value="1"></div>
+        <div class="form-group"><label>Price ($)</label><input type="number" class="inp-part-price" step="0.01" placeholder="0.00"></div>
+      </div>
+    `;
+    document.getElementById('m-parts-list').appendChild(div);
+  }
+
+  function addLabourInput() {
+    const div = document.createElement('div');
+    div.className = 'item-block';
+    div.innerHTML = `
+      <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+      <div class="form-group"><label>Labour Code</label><input type="text" class="inp-labour-code"></div>
+      <div class="form-group"><label>Description</label><input type="text" class="inp-labour-desc"></div>
+      <div class="row-2">
+        <div class="form-group"><label>Hours</label><input type="number" class="inp-labour-hours" step="0.5" value="1"></div>
+        <div class="form-group"><label>Rate ($/hr)</label><input type="number" class="inp-labour-rate" step="0.01" placeholder="0.00"></div>
+      </div>
+    `;
+    document.getElementById('m-labour-list').appendChild(div);
+  }
+
+  addEquipmentInput();
+  addPartInput();
+  addLabourInput();
+
+  function fillSampleData() {
+    document.getElementById('m-wo-num').value = '74982';
+    document.getElementById('m-cust-num').value = '05362';
+    document.getElementById('m-cust-name').value = 'Element Hotel';
+    document.getElementById('m-address').value = '6170 HWY 7, Vaughan';
+    document.getElementById('m-phone').value = '905-555-0199';
+    document.getElementById('m-fax').value = '905-555-0100';
+    document.getElementById('m-email').value = 'service@elementhotel.com';
+
+    document.getElementById('m-equipment-list').innerHTML = '';
+    addEquipmentInput();
+    document.querySelectorAll('.inp-equip-make')[0].value = 'Maytag';
+    document.querySelectorAll('.inp-equip-model')[0].value = 'MHN33PFCWW2';
+    document.querySelectorAll('.inp-equip-serial')[0].value = 'CB0300099';
+    document.querySelectorAll('.inp-equip-desc')[0].value = 'The washer needs a new membrane switch';
+
+    document.getElementById('m-parts-list').innerHTML = '';
+    addPartInput();
+    document.querySelectorAll('.inp-part-num')[0].value = 'W11455199';
+    document.querySelectorAll('.inp-part-desc')[0].value = 'Membrane switch';
+    document.querySelectorAll('.inp-part-qty')[0].value = '1';
+    document.querySelectorAll('.inp-part-price')[0].value = '50.00';
+
+    document.getElementById('m-labour-list').innerHTML = '';
+    addLabourInput();
+    document.querySelectorAll('.inp-labour-code')[0].value = 'LAB-01';
+    document.querySelectorAll('.inp-labour-desc')[0].value = 'Onsite Service & Installation';
+    document.querySelectorAll('.inp-labour-hours')[0].value = '1';
+    document.querySelectorAll('.inp-labour-rate')[0].value = '50.00';
+
+    document.getElementById('m-comments').value = 'Unit tested successfully post repair.';
+    document.getElementById('m-tech').value = 'Carlos M.';
+  }
+
+  async function generatePDF() {
+    document.getElementById('pdf-date').innerText = document.getElementById('m-date').value || '';
+    document.getElementById('pdf-wo-num').innerText = document.getElementById('m-wo-num').value || '';
+    document.getElementById('pdf-cust-num').innerText = document.getElementById('m-cust-num').value || '';
+    document.getElementById('pdf-cust-name').innerText = document.getElementById('m-cust-name').value || '';
+    document.getElementById('pdf-address').innerText = document.getElementById('m-address').value || '';
+    document.getElementById('pdf-phone').innerText = document.getElementById('m-phone').value || '';
+    document.getElementById('pdf-fax').innerText = document.getElementById('m-fax').value || '';
+    document.getElementById('pdf-email').innerText = document.getElementById('m-email').value || '';
+    document.getElementById('pdf-comments').innerText = document.getElementById('m-comments').value || '';
+    document.getElementById('pdf-tech').innerText = document.getElementById('m-tech').value || '';
+
+    const equipContainer = document.getElementById('pdf-equipment-container');
+    equipContainer.innerHTML = '';
+    const makes = document.querySelectorAll('.inp-equip-make');
+    const models = document.querySelectorAll('.inp-equip-model');
+    const serials = document.querySelectorAll('.inp-equip-serial');
+    const descs = document.querySelectorAll('.inp-equip-desc');
+
+    makes.forEach((_, i) => {
+      const block = document.createElement('div');
+      block.className = 'pdf-equip-block';
+      block.innerHTML = `
+        <table class="pdf-layout-table" style="margin-bottom:0;">
+          <tr>
+            <td style="width: 50%;" class="pdf-line-cell">
+              <span class="pdf-label">MAKE:</span> <span class="pdf-val">${makes[i].value || ''}</span>
+            </td>
+            <td style="width: 50%;" class="pdf-line-cell">
+              <span class="pdf-label">MODEL:</span> <span class="pdf-val">${models[i].value || ''}</span>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="pdf-line-cell">
+              <span class="pdf-label">SERIAL #:</span> <span class="pdf-val">${serials[i].value || ''}</span>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding-top: 4px;">
+              <span class="pdf-label">WORK REQUIRED:</span>
+              <div class="pdf-val" style="font-size: 10px; padding-left: 4px; margin-top: 2px;">${descs[i].value || ''}</div>
+            </td>
+          </tr>
+        </table>
+      `;
+      equipContainer.appendChild(block);
+    });
+
+    const partsTbody = document.getElementById('pdf-parts-rows');
+    partsTbody.innerHTML = '';
+    const partNums = document.querySelectorAll('.inp-part-num');
+    const partDescs = document.querySelectorAll('.inp-part-desc');
+    const partQtys = document.querySelectorAll('.inp-part-qty');
+    const partPrices = document.querySelectorAll('.inp-part-price');
+
+    partNums.forEach((_, i) => {
+      const qty = parseFloat(partQtys[i].value) || 0;
+      const price = parseFloat(partPrices[i].value) || 0;
+      partsTbody.innerHTML += `
+        <tr>
+          <td>${partNums[i].value || ''}</td>
+          <td>${partDescs[i].value || ''}</td>
+          <td class="text-right">${qty}</td>
+          <td class="text-right">$${price.toFixed(2)}</td>
+        </tr>
+      `;
+    });
+
+    const labourTbody = document.getElementById('pdf-labour-rows');
+    labourTbody.innerHTML = '';
+    const labourCodes = document.querySelectorAll('.inp-labour-code');
+    const labourDescs = document.querySelectorAll('.inp-labour-desc');
+    const labourHours = document.querySelectorAll('.inp-labour-hours');
+    const labourRates = document.querySelectorAll('.inp-labour-rate');
+
+    labourCodes.forEach((_, i) => {
+      const hrs = parseFloat(labourHours[i].value) || 0;
+      const rate = parseFloat(labourRates[i].value) || 0;
+      labourTbody.innerHTML += `
+        <tr>
+          <td>${labourCodes[i].value || ''}</td>
+          <td>${labourDescs[i].value || ''}</td>
+          <td class="text-right">${hrs}</td>
+          <td class="text-right">$${rate.toFixed(2)}</td>
+        </tr>
+      `;
+    });
+
+    const wrapper = document.getElementById('pdf-template-wrapper');
+    const element = document.getElementById('pdf-content');
+
+    // Temporarily unhide for capture
+    wrapper.style.display = 'block';
+
+    const opt = {
+      margin:       0.2,
+      filename:     `Quotation_${document.getElementById('m-wo-num').value || 'Draft'}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { 
+        scale: 2, 
+        scrollX: 0, 
+        scrollY: 0,
+        windowWidth: 700,
+        useCORS: true
+      },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    try {
+      await html2pdf().set(opt).from(element).save();
+    } finally {
+      // Re-hide container immediately after export
+      wrapper.style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>
