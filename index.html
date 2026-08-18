@@ -215,7 +215,7 @@
     .pdf-table th, .pdf-table td { 
       border: 1px solid #333333; 
       padding: 5px 6px; 
-      text-align: left; 
+      text-align: left !important; 
       font-size: 11px !important; 
       color: #111111;
     }
@@ -225,9 +225,10 @@
       font-weight: 600; 
       text-transform: uppercase; 
       font-size: 11px !important;
+      text-align: left !important;
     }
 
-    .text-right { text-align: right; }
+    .text-right { text-align: right !important; }
   </style>
 </head>
 <body>
@@ -321,10 +322,11 @@
     <table class="pdf-table">
       <thead>
         <tr>
-          <th style="width: 25%;">PART #'S</th>
-          <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%;">QTY</th>
-          <th style="width: 18%;">PRICE</th>
+          <style>#pdf-template-wrapper .pdf-table th, #pdf-template-wrapper .pdf-table td { text-align: left !important; }</style>
+          <th style="width: 25%; text-align: left !important;">PART #'S</th>
+          <th style="width: 45%; text-align: left !important;">DESCRIPTION</th>
+          <th style="width: 12%; text-align: left !important;">QTY</th>
+          <th style="width: 18%; text-align: left !important;">PRICE</th>
         </tr>
       </thead>
       <tbody id="pdf-parts-rows"></tbody>
@@ -334,10 +336,10 @@
     <table class="pdf-table">
       <thead>
         <tr>
-          <th style="width: 25%;">LABOUR CHARGES</th>
-          <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%;"># OF HOURS</th>
-          <th style="width: 18%;">PRICE</th>
+          <th style="width: 25%; text-align: left !important;">LABOUR CHARGES</th>
+          <th style="width: 45%; text-align: left !important;">DESCRIPTION</th>
+          <th style="width: 12%; text-align: left !important;"># OF HOURS</th>
+          <th style="width: 18%; text-align: left !important;">PRICE</th>
         </tr>
       </thead>
       <tbody id="pdf-labour-rows"></tbody>
@@ -523,10 +525,10 @@
       const price = parseFloat(partPrices[i].value) || 0;
       partsTbody.innerHTML += `
         <tr>
-          <td>${partNums[i].value || ''}</td>
-          <td>${partDescs[i].value || ''}</td>
-          <td>${qty}</td>
-          <td>$${price.toFixed(2)}</td>
+          <td style="text-align: left !important;">${partNums[i].value || ''}</td>
+          <td style="text-align: left !important;">${partDescs[i].value || ''}</td>
+          <td style="text-align: left !important;">${qty}</td>
+          <td style="text-align: left !important;">$${price.toFixed(2)}</td>
         </tr>
       `;
     });
@@ -543,10 +545,10 @@
       const rate = parseFloat(labourRates[i].value) || 0;
       labourTbody.innerHTML += `
         <tr>
-          <td>${labourCodes[i].value || ''}</td>
-          <td>${labourDescs[i].value || ''}</td>
-          <td>${hrs}</td>
-          <td>$${rate.toFixed(2)}</td>
+          <td style="text-align: left !important;">${labourCodes[i].value || ''}</td>
+          <td style="text-align: left !important;">${labourDescs[i].value || ''}</td>
+          <td style="text-align: left !important;">${hrs}</td>
+          <td style="text-align: left !important;">$${rate.toFixed(2)}</td>
         </tr>
       `;
     });
