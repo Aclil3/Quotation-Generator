@@ -75,12 +75,6 @@
       min-height: 60px;
     }
 
-    input[type="date"]::-webkit-date-and-time-value {
-      text-align: left;
-      height: 24px;
-      line-height: 24px;
-    }
-
     .row-2 { 
       display: flex; 
       gap: 8px; 
@@ -161,7 +155,6 @@
       font-family: Arial, Helvetica, sans-serif !important;
       font-size: 11px !important;
       line-height: 1.4;
-      -webkit-text-size-adjust: 100%;
     }
 
     .pdf-header { 
@@ -182,7 +175,6 @@
       vertical-align: bottom;
       font-size: 11px !important;
       color: #111111;
-      min-height: 20px;
     }
 
     .pdf-line-cell {
@@ -205,11 +197,6 @@
       min-height: 14px;
     }
 
-    #pdf-comments {
-      font-weight: bold !important;
-      color: #000000 !important;
-    }
-
     .pdf-section-head { 
       background: #e5e7eb; 
       font-weight: 600; 
@@ -219,7 +206,6 @@
       font-size: 11px !important; 
       color: #000000;
       text-transform: uppercase;
-      page-break-inside: avoid;
     }
     
     .pdf-equip-block { 
@@ -235,7 +221,7 @@
       font-weight: 700;
       font-size: 10px !important;
       text-transform: uppercase;
-      margin-top: 6px;
+      margin-top: 8px;
       margin-bottom: 2px;
       color: #111111;
     }
@@ -245,7 +231,7 @@
       border-collapse: collapse; 
       table-layout: fixed;
       margin-top: 2px; 
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .pdf-table th, .pdf-table td { 
@@ -254,11 +240,8 @@
       text-align: left !important; 
       font-size: 10px !important; 
       color: #111111;
-      height: 20px;
-    }
-
-    .pdf-table tr {
-      page-break-inside: avoid;
+      overflow: hidden;
+      word-wrap: break-word;
     }
 
     .pdf-table th { 
@@ -305,8 +288,8 @@
     
     <table class="pdf-layout-table pdf-header">
       <tr>
-        <td style="font-size: 16px !important; font-weight: bold; padding: 0;">SERVICE QUOTATION</td>
-        <td class="text-right" style="padding: 0;">
+        <td style="font-size: 16px !important; font-weight: bold; padding: 0; width: 60%;">SERVICE QUOTATION</td>
+        <td class="text-right" style="padding: 0; width: 40%;">
           <span class="pdf-label">DATE:</span> <span class="pdf-val" id="pdf-date"></span>
         </td>
       </tr>
@@ -462,7 +445,6 @@
     const list = document.getElementById('m-equipment-list');
     list.innerHTML = '';
     
-    // Equip 1
     addEquipmentInput();
     const card1 = list.children[0];
     card1.querySelector('.inp-equip-make').value = 'Maytag';
@@ -491,7 +473,6 @@
     labour1[0].querySelector('.inp-labour-hours').value = '1.5';
     labour1[0].querySelector('.inp-labour-rate').value = '85.00';
 
-    // Equip 2
     addEquipmentInput();
     const card2 = list.children[1];
     card2.querySelector('.inp-equip-make').value = 'Maytag';
@@ -540,7 +521,7 @@
       let partRowsHtml = '';
       const partBlocks = card.querySelectorAll('.container-parts .item-block');
       if (partBlocks.length === 0) {
-        partRowsHtml = `<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>`;
+        partRowsHtml = `<tr><td colspan="4">&nbsp;</td></tr>`;
       } else {
         partBlocks.forEach(pb => {
           const num = pb.querySelector('.inp-part-num').value.trim() || '\u00A0';
@@ -551,10 +532,10 @@
 
           partRowsHtml += `
             <tr>
-              <td>${num}</td>
-              <td>${desc}</td>
-              <td>${qty !== '' ? qty : '\u00A0'}</td>
-              <td>${priceStr}</td>
+              <td style="width: 25%;">${num}</td>
+              <td style="width: 45%;">${desc}</td>
+              <td style="width: 12%;">${qty !== '' ? qty : '\u00A0'}</td>
+              <td style="width: 18%;">${priceStr}</td>
             </tr>
           `;
         });
@@ -563,7 +544,7 @@
       let labourRowsHtml = '';
       const labourBlocks = card.querySelectorAll('.container-labour .item-block');
       if (labourBlocks.length === 0) {
-        labourRowsHtml = `<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>`;
+        labourRowsHtml = `<tr><td colspan="4">&nbsp;</td></tr>`;
       } else {
         labourBlocks.forEach(lb => {
           const code = lb.querySelector('.inp-labour-code').value.trim() || '\u00A0';
@@ -574,10 +555,10 @@
 
           labourRowsHtml += `
             <tr>
-              <td>${code}</td>
-              <td>${desc}</td>
-              <td>${hrs !== '' ? hrs : '\u00A0'}</td>
-              <td>${rateStr}</td>
+              <td style="width: 25%;">${code}</td>
+              <td style="width: 45%;">${desc}</td>
+              <td style="width: 12%;">${hrs !== '' ? hrs : '\u00A0'}</td>
+              <td style="width: 18%;">${rateStr}</td>
             </tr>
           `;
         });
