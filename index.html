@@ -139,6 +139,7 @@
     .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
     .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
 
+    /* PDF Printable Layout CSS */
     #pdf-template-wrapper {
       position: absolute;
       left: -9999px;
@@ -149,62 +150,53 @@
 
     .pdf-page {
       width: 750px;
-      padding: 30px;
+      padding: 24px;
       background: #ffffff;
-      color: #111111;
+      color: #000000;
       font-family: Arial, Helvetica, sans-serif !important;
       font-size: 11px !important;
-      line-height: 1.4;
+      line-height: 1.3;
     }
 
-    .pdf-header { 
-      border-bottom: 1.5px solid #000000; 
-      padding-bottom: 4px; 
-      margin-bottom: 8px; 
+    .pdf-header-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid #000000;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
     }
 
-    .pdf-layout-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      margin-bottom: 6px;
-    }
-    
-    .pdf-layout-table td {
-      padding: 4px 2px;
-      vertical-align: bottom;
-      font-size: 11px !important;
-      color: #111111;
+    .pdf-header-title {
+      font-size: 16px;
+      font-weight: bold;
     }
 
-    .pdf-line-cell {
+    .pdf-info-row {
+      display: flex;
       border-bottom: 1px solid #333333;
+      padding: 3px 0;
     }
+
+    .pdf-col-100 { width: 100%; }
+    .pdf-col-50 { width: 50%; }
 
     .pdf-label {
-      font-weight: 600;
-      font-size: 11px !important;
-      color: #000000;
+      font-weight: bold;
       text-transform: uppercase;
+      margin-right: 4px;
     }
 
     .pdf-val {
-      font-weight: 400;
-      font-size: 11px !important;
-      color: #222222;
       word-break: break-word;
-      display: inline-block;
-      min-height: 14px;
     }
 
     .pdf-section-head { 
       background: #e5e7eb; 
-      font-weight: 600; 
+      font-weight: bold; 
       padding: 4px 6px; 
       border: 1px solid #333333; 
       margin-top: 10px; 
-      font-size: 11px !important; 
-      color: #000000;
+      font-size: 11px; 
       text-transform: uppercase;
     }
     
@@ -218,39 +210,47 @@
     }
 
     .pdf-sub-title {
-      font-weight: 700;
-      font-size: 10px !important;
+      font-weight: bold;
+      font-size: 10px;
       text-transform: uppercase;
       margin-top: 8px;
-      margin-bottom: 2px;
-      color: #111111;
-    }
-    
-    .pdf-table { 
-      width: 100%; 
-      border-collapse: collapse; 
-      table-layout: fixed;
-      margin-top: 2px; 
       margin-bottom: 4px;
-    }
-
-    .pdf-table th, .pdf-table td { 
-      border: 1px solid #333333; 
-      padding: 4px 6px; 
-      text-align: left !important; 
-      font-size: 10px !important; 
       color: #111111;
+    }
+
+    /* FLEXBOX GRID FOR TABLES */
+    .pdf-grid-row {
+      display: flex !important;
+      width: 100% !important;
+      border-left: 1px solid #333333;
+      border-right: 1px solid #333333;
+      border-bottom: 1px solid #333333;
+    }
+
+    .pdf-grid-row.header {
+      background: #f3f4f6;
+      font-weight: bold;
+      border-top: 1px solid #333333;
+      text-transform: uppercase;
+    }
+
+    .pdf-cell {
+      padding: 4px 6px;
+      font-size: 10px;
+      box-sizing: border-box;
+      border-right: 1px solid #333333;
       overflow: hidden;
-      word-wrap: break-word;
+      word-break: break-word;
     }
 
-    .pdf-table th { 
-      background: #f3f4f6; 
-      font-weight: 600; 
-      text-transform: uppercase; 
+    .pdf-cell:last-child {
+      border-right: none;
     }
 
-    .text-right { text-align: right !important; }
+    .c-code { width: 25%; }
+    .c-desc { width: 45%; }
+    .c-qty  { width: 12%; }
+    .c-price{ width: 18%; }
   </style>
 </head>
 <body>
@@ -283,75 +283,61 @@
   <button class="btn btn-primary" onclick="generatePDF()">Download PDF</button>
 </div>
 
+<!-- PDF Export Wrapper -->
 <div id="pdf-template-wrapper">
   <div class="pdf-page" id="pdf-content">
     
-    <table class="pdf-layout-table pdf-header">
-      <tr>
-        <td style="font-size: 16px !important; font-weight: bold; padding: 0; width: 60%;">SERVICE QUOTATION</td>
-        <td class="text-right" style="padding: 0; width: 40%;">
-          <span class="pdf-label">DATE:</span> <span class="pdf-val" id="pdf-date"></span>
-        </td>
-      </tr>
-    </table>
+    <div class="pdf-header-row">
+      <div class="pdf-header-title">SERVICE QUOTATION</div>
+      <div><span class="pdf-label">DATE:</span><span class="pdf-val" id="pdf-date"></span></div>
+    </div>
 
-    <table class="pdf-layout-table">
-      <tr>
-        <td colspan="2" class="pdf-line-cell">
-          <span class="pdf-label">WORK ORDER #:</span> <span class="pdf-val" id="pdf-wo-num"></span>
-        </td>
-      </tr>
-      <tr>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">CUSTOMER #:</span> <span class="pdf-val" id="pdf-cust-num"></span>
-        </td>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">CUSTOMER NAME:</span> <span class="pdf-val" id="pdf-cust-name"></span>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" class="pdf-line-cell">
-          <span class="pdf-label">ADDRESS:</span> <span class="pdf-val" id="pdf-address"></span>
-        </td>
-      </tr>
-      <tr>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">PHONE #:</span> <span class="pdf-val" id="pdf-phone"></span>
-        </td>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">FAX #:</span> <span class="pdf-val" id="pdf-fax"></span>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" class="pdf-line-cell">
-          <span class="pdf-label">EMAIL:</span> <span class="pdf-val" id="pdf-email"></span>
-        </td>
-      </tr>
-    </table>
+    <div class="pdf-info-row pdf-col-100">
+      <span class="pdf-label">WORK ORDER #:</span><span class="pdf-val" id="pdf-wo-num"></span>
+    </div>
+    
+    <div style="display:flex;">
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">CUSTOMER #:</span><span class="pdf-val" id="pdf-cust-num"></span>
+      </div>
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">CUSTOMER NAME:</span><span class="pdf-val" id="pdf-cust-name"></span>
+      </div>
+    </div>
+
+    <div class="pdf-info-row pdf-col-100">
+      <span class="pdf-label">ADDRESS:</span><span class="pdf-val" id="pdf-address"></span>
+    </div>
+
+    <div style="display:flex;">
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">PHONE #:</span><span class="pdf-val" id="pdf-phone"></span>
+      </div>
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">FAX #:</span><span class="pdf-val" id="pdf-fax"></span>
+      </div>
+    </div>
+
+    <div class="pdf-info-row pdf-col-100">
+      <span class="pdf-label">EMAIL:</span><span class="pdf-val" id="pdf-email"></span>
+    </div>
 
     <div class="pdf-section-head">EQUIPMENT & PARTS DETAILS</div>
     <div id="pdf-equipment-container"></div>
 
-    <table class="pdf-layout-table" style="margin-top: 8px; page-break-inside: avoid;">
-      <tr>
-        <td>
-          <span class="pdf-label">ADDITIONAL COMMENTS:</span>
-          <div style="border-bottom: 1px solid #333333; min-height: 22px; margin-top: 2px;" id="pdf-comments" class="pdf-val"></div>
-        </td>
-      </tr>
-    </table>
+    <div class="pdf-info-row pdf-col-100" style="margin-top: 8px; flex-direction: column; border-bottom: none;">
+      <span class="pdf-label">ADDITIONAL COMMENTS:</span>
+      <div style="border-bottom: 1px solid #333333; min-height: 20px; margin-top: 2px;" id="pdf-comments" class="pdf-val"></div>
+    </div>
 
-    <table class="pdf-layout-table" style="margin-top: 8px; border-top: 1px solid #333333; padding-top: 6px; page-break-inside: avoid;">
-      <tr>
-        <td style="width: 50%;"><span class="pdf-label">CUSTOMER ACCEPTED:</span> <span class="pdf-val">[ ] PLEASE CHECK IF ACCEPTED</span></td>
-        <td style="width: 50%;"><span class="pdf-label">WORK COMPLETED:</span> <span class="pdf-val">[ ]</span></td>
-      </tr>
-      <tr>
-        <td colspan="2" class="pdf-line-cell" style="padding-top: 6px;">
-          <span class="pdf-label">SERVICE TECH:</span> <span class="pdf-val" id="pdf-tech"></span>
-        </td>
-      </tr>
-    </table>
+    <div style="display:flex; margin-top: 12px; border-top: 1px solid #333333; padding-top: 6px; page-break-inside: avoid;">
+      <div class="pdf-col-50"><span class="pdf-label">CUSTOMER ACCEPTED:</span> <span class="pdf-val">[ ] PLEASE CHECK</span></div>
+      <div class="pdf-col-50"><span class="pdf-label">WORK COMPLETED:</span> <span class="pdf-val">[ ]</span></div>
+    </div>
+    
+    <div class="pdf-info-row pdf-col-100" style="margin-top: 6px;">
+      <span class="pdf-label">SERVICE TECH:</span><span class="pdf-val" id="pdf-tech"></span>
+    </div>
 
   </div>
 </div>
@@ -521,7 +507,7 @@
       let partRowsHtml = '';
       const partBlocks = card.querySelectorAll('.container-parts .item-block');
       if (partBlocks.length === 0) {
-        partRowsHtml = `<tr><td colspan="4">&nbsp;</td></tr>`;
+        partRowsHtml = `<div class="pdf-grid-row"><div class="pdf-cell" style="width:100%">&nbsp;</div></div>`;
       } else {
         partBlocks.forEach(pb => {
           const num = pb.querySelector('.inp-part-num').value.trim() || '\u00A0';
@@ -531,12 +517,12 @@
           const priceStr = price !== '' ? `$${parseFloat(price).toFixed(2)}` : '\u00A0';
 
           partRowsHtml += `
-            <tr>
-              <td style="width: 25%;">${num}</td>
-              <td style="width: 45%;">${desc}</td>
-              <td style="width: 12%;">${qty !== '' ? qty : '\u00A0'}</td>
-              <td style="width: 18%;">${priceStr}</td>
-            </tr>
+            <div class="pdf-grid-row">
+              <div class="pdf-cell c-code">${num}</div>
+              <div class="pdf-cell c-desc">${desc}</div>
+              <div class="pdf-cell c-qty">${qty !== '' ? qty : '\u00A0'}</div>
+              <div class="pdf-cell c-price">${priceStr}</div>
+            </div>
           `;
         });
       }
@@ -544,7 +530,7 @@
       let labourRowsHtml = '';
       const labourBlocks = card.querySelectorAll('.container-labour .item-block');
       if (labourBlocks.length === 0) {
-        labourRowsHtml = `<tr><td colspan="4">&nbsp;</td></tr>`;
+        labourRowsHtml = `<div class="pdf-grid-row"><div class="pdf-cell" style="width:100%">&nbsp;</div></div>`;
       } else {
         labourBlocks.forEach(lb => {
           const code = lb.querySelector('.inp-labour-code').value.trim() || '\u00A0';
@@ -554,55 +540,45 @@
           const rateStr = rate !== '' ? `$${parseFloat(rate).toFixed(2)}` : '\u00A0';
 
           labourRowsHtml += `
-            <tr>
-              <td style="width: 25%;">${code}</td>
-              <td style="width: 45%;">${desc}</td>
-              <td style="width: 12%;">${hrs !== '' ? hrs : '\u00A0'}</td>
-              <td style="width: 18%;">${rateStr}</td>
-            </tr>
+            <div class="pdf-grid-row">
+              <div class="pdf-cell c-code">${code}</div>
+              <div class="pdf-cell c-desc">${desc}</div>
+              <div class="pdf-cell c-qty">${hrs !== '' ? hrs : '\u00A0'}</div>
+              <div class="pdf-cell c-price">${rateStr}</div>
+            </div>
           `;
         });
       }
 
       block.innerHTML = `
-        <table class="pdf-layout-table" style="margin-bottom:2px;">
-          <tr>
-            <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MAKE:</span> <span class="pdf-val">${makeVal}</span></td>
-            <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MODEL:</span> <span class="pdf-val">${modelVal}</span></td>
-          </tr>
-          <tr>
-            <td colspan="2" class="pdf-line-cell"><span class="pdf-label">SERIAL #:</span> <span class="pdf-val">${serialVal}</span></td>
-          </tr>
-          <tr>
-            <td colspan="2" style="padding-top: 2px;"><span class="pdf-label">WORK REQUIRED:</span> <div class="pdf-val" style="padding-left: 2px;">${descVal}</div></td>
-          </tr>
-        </table>
+        <div style="display:flex;">
+          <div class="pdf-info-row pdf-col-50"><span class="pdf-label">MAKE:</span><span class="pdf-val">${makeVal}</span></div>
+          <div class="pdf-info-row pdf-col-50"><span class="pdf-label">MODEL:</span><span class="pdf-val">${modelVal}</span></div>
+        </div>
+        <div class="pdf-info-row pdf-col-100">
+          <span class="pdf-label">SERIAL #:</span><span class="pdf-val">${serialVal}</span>
+        </div>
+        <div class="pdf-info-row pdf-col-100" style="border-bottom:none;">
+          <span class="pdf-label">WORK REQUIRED:</span><span class="pdf-val">${descVal}</span>
+        </div>
 
         <div class="pdf-sub-title">PARTS (EQUIPMENT #${index + 1})</div>
-        <table class="pdf-table">
-          <thead>
-            <tr>
-              <th style="width: 25%;">PART #'S</th>
-              <th style="width: 45%;">DESCRIPTION</th>
-              <th style="width: 12%;">QTY</th>
-              <th style="width: 18%;">PRICE</th>
-            </tr>
-          </thead>
-          <tbody>${partRowsHtml}</tbody>
-        </table>
+        <div class="pdf-grid-row header">
+          <div class="pdf-cell c-code">PART #'S</div>
+          <div class="pdf-cell c-desc">DESCRIPTION</div>
+          <div class="pdf-cell c-qty">QTY</div>
+          <div class="pdf-cell c-price">PRICE</div>
+        </div>
+        ${partRowsHtml}
 
         <div class="pdf-sub-title">LABOUR (EQUIPMENT #${index + 1})</div>
-        <table class="pdf-table">
-          <thead>
-            <tr>
-              <th style="width: 25%;">CODE</th>
-              <th style="width: 45%;">DESCRIPTION</th>
-              <th style="width: 12%;">HOURS</th>
-              <th style="width: 18%;">RATE</th>
-            </tr>
-          </thead>
-          <tbody>${labourRowsHtml}</tbody>
-        </table>
+        <div class="pdf-grid-row header">
+          <div class="pdf-cell c-code">CODE</div>
+          <div class="pdf-cell c-desc">DESCRIPTION</div>
+          <div class="pdf-cell c-qty">HOURS</div>
+          <div class="pdf-cell c-price">RATE</div>
+        </div>
+        ${labourRowsHtml}
       `;
       
       equipContainer.appendChild(block);
@@ -616,8 +592,6 @@
     wrapper.style.position = 'fixed';
     wrapper.style.zIndex = '99999';
 
-    const fullHeight = element.scrollHeight;
-
     const opt = {
       margin:       [0.2, 0.2, 0.2, 0.2],
       filename:     `Quotation_${document.getElementById('m-wo-num').value || 'Draft'}.pdf`,
@@ -627,9 +601,7 @@
         scrollX: 0, 
         scrollY: 0,
         windowWidth: 750,
-        height: fullHeight,
-        useCORS: true,
-        letterRendering: true
+        useCORS: true
       },
       jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
       pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
