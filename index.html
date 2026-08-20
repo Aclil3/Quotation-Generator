@@ -98,6 +98,16 @@
       margin-bottom: 8px; 
       position: relative; 
     }
+
+    .nested-block {
+      background: #ffffff;
+      border: 1px dashed #d1d5db;
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+      position: relative;
+    }
     
     .btn-remove { 
       position: absolute; 
@@ -125,6 +135,7 @@
     }
     
     .btn-add { background: #e5e7eb; color: #1f2937; margin-bottom: 12px; }
+    .btn-add-sm { background: #d1d5db; color: #1f2937; padding: 6px; font-size: 12px; width: auto; margin-bottom: 4px; }
     .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
     .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
 
@@ -188,7 +199,6 @@
       min-height: 14px;
     }
 
-    /* Bold rule for additional info comments */
     #pdf-comments {
       font-weight: bold !important;
       color: #000000 !important;
@@ -209,7 +219,7 @@
     .pdf-equip-block { 
       border: 1px solid #333333; 
       padding: 6px 8px; 
-      margin-bottom: 6px; 
+      margin-bottom: 8px; 
       background: #fafafa; 
       page-break-inside: avoid;
     }
@@ -223,11 +233,11 @@
 
     .pdf-table th, .pdf-table td { 
       border: 1px solid #333333; 
-      padding: 6px; 
+      padding: 4px 6px; 
       text-align: left !important; 
-      font-size: 11px !important; 
+      font-size: 10px !important; 
       color: #111111;
-      height: 24px;
+      height: 20px;
     }
 
     .pdf-table tr {
@@ -238,7 +248,6 @@
       background: #f3f4f6; 
       font-weight: 600; 
       text-transform: uppercase; 
-      font-size: 11px !important;
     }
 
     .text-right { text-align: right !important; }
@@ -263,13 +272,9 @@
   </div>
   <div class="form-group"><label>Email</label><input type="email" id="m-email"></div>
 
-  <h2>Equipment Details</h2>
+  <h2>Equipment & Required Parts</h2>
   <div id="m-equipment-list"></div>
   <button class="btn btn-add" onclick="addEquipmentInput()">+ Add Equipment</button>
-
-  <h2>Parts</h2>
-  <div id="m-parts-list"></div>
-  <button class="btn btn-add" onclick="addPartInput()">+ Add Part Row</button>
 
   <h2>Labour Charges</h2>
   <div id="m-labour-list"></div>
@@ -328,21 +333,8 @@
       </tr>
     </table>
 
-    <div class="pdf-section-head">EQUIPMENT & WORK REQUIRED</div>
+    <div class="pdf-section-head">EQUIPMENT & PARTS REQUIRED</div>
     <div id="pdf-equipment-container" style="margin-top: 4px;"></div>
-
-    <div class="pdf-section-head">PARTS</div>
-    <table class="pdf-table">
-      <thead>
-        <tr>
-          <th style="width: 25%;">PART #'S</th>
-          <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%;">QTY</th>
-          <th style="width: 18%;">PRICE</th>
-        </tr>
-      </thead>
-      <tbody id="pdf-parts-rows"></tbody>
-    </table>
 
     <div class="pdf-section-head">LABOUR CHARGES</div>
     <table class="pdf-table">
@@ -394,7 +386,7 @@
   function addEquipmentInput() {
     const list = document.getElementById('m-equipment-list');
     const div = document.createElement('div');
-    div.className = 'item-block';
+    div.className = 'item-block equipment-card';
     div.innerHTML = `
       <button class="btn-remove" onclick="removeEquipmentRow(this)">X</button>
       <div class="row-2">
@@ -403,6 +395,11 @@
       </div>
       <div class="form-group"><label>Serial #</label><input type="text" class="inp-equip-serial"></div>
       <div class="form-group"><label>Description of Service Required</label><textarea class="inp-equip-desc" rows="2"></textarea></div>
+      <div style="margin-top: 8px;">
+        <label style="color: #2563eb;">Parts for this Equipment</label>
+        <div class="parts-container"></div>
+        <button type="button" class="btn btn-add-sm" onclick="addPartToEquipment(this)">+ Add Part</button>
+      </div>
     `;
     list.appendChild(div);
   }
@@ -416,9 +413,10 @@
     }
   }
 
-  function addPartInput() {
+  function addPartToEquipment(btn) {
+    const partsContainer = btn.previousElementSibling;
     const div = document.createElement('div');
-    div.className = 'item-block';
+    div.className = 'nested-block part-card';
     div.innerHTML = `
       <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
       <div class="form-group"><label>Part #</label><input type="text" class="inp-part-num"></div>
@@ -428,7 +426,7 @@
         <div class="form-group"><label>Price ($)</label><input type="number" class="inp-part-price" step="0.01" placeholder="0.00"></div>
       </div>
     `;
-    document.getElementById('m-parts-list').appendChild(div);
+    partsContainer.appendChild(div);
   }
 
   function addLabourInput() {
@@ -447,7 +445,6 @@
   }
 
   addEquipmentInput();
-  addPartInput();
   addLabourInput();
 
   function fillSampleData() {
@@ -461,23 +458,27 @@
 
     document.getElementById('m-equipment-list').innerHTML = '';
     addEquipmentInput();
-    document.querySelectorAll('.inp-equip-make')[0].value = 'Maytag';
-    document.querySelectorAll('.inp-equip-model')[0].value = 'MAT14CSAWW1';
-    document.querySelectorAll('.inp-equip-serial')[0].value = 'C22560383';
-    document.querySelectorAll('.inp-equip-desc')[0].value = 'The washer needs a new motor and belt';
+    
+    const equip1 = document.querySelectorAll('.equipment-card')[0];
+    equip1.querySelector('.inp-equip-make').value = 'Maytag';
+    equip1.querySelector('.inp-equip-model').value = 'MAT14CSAWW1';
+    equip1.querySelector('.inp-equip-serial').value = 'C22560383';
+    equip1.querySelector('.inp-equip-desc').value = 'The washer needs a new motor and belt';
 
-    document.getElementById('m-parts-list').innerHTML = '';
-    addPartInput();
-    document.querySelectorAll('.inp-part-num')[0].value = 'W10210383';
-    document.querySelectorAll('.inp-part-desc')[0].value = 'Drive Motor';
-    document.querySelectorAll('.inp-part-qty')[0].value = '1';
-    document.querySelectorAll('.inp-part-price')[0].value = '145.00';
+    const addPartBtn1 = equip1.querySelector('.btn-add-sm');
+    addPartToEquipment(addPartBtn1);
+    addPartToEquipment(addPartBtn1);
 
-    addPartInput();
-    document.querySelectorAll('.inp-part-num')[1].value = 'W10006384';
-    document.querySelectorAll('.inp-part-desc')[1].value = 'Drive Belt';
-    document.querySelectorAll('.inp-part-qty')[1].value = '1';
-    document.querySelectorAll('.inp-part-price')[1].value = '28.50';
+    const parts1 = equip1.querySelectorAll('.part-card');
+    parts1[0].querySelector('.inp-part-num').value = 'W10210383';
+    parts1[0].querySelector('.inp-part-desc').value = 'Drive Motor';
+    parts1[0].querySelector('.inp-part-qty').value = '1';
+    parts1[0].querySelector('.inp-part-price').value = '145.00';
+
+    parts1[1].querySelector('.inp-part-num').value = 'W10006384';
+    parts1[1].querySelector('.inp-part-desc').value = 'Drive Belt';
+    parts1[1].querySelector('.inp-part-qty').value = '1';
+    parts1[1].querySelector('.inp-part-price').value = '28.50';
 
     document.getElementById('m-labour-list').innerHTML = '';
     addLabourInput();
@@ -504,12 +505,10 @@
 
     const equipContainer = document.getElementById('pdf-equipment-container');
     equipContainer.innerHTML = '';
-    const makes = document.querySelectorAll('.inp-equip-make');
-    const models = document.querySelectorAll('.inp-equip-model');
-    const serials = document.querySelectorAll('.inp-equip-serial');
-    const descs = document.querySelectorAll('.inp-equip-desc');
+    
+    const equipCards = document.querySelectorAll('.equipment-card');
 
-    if (makes.length === 0) {
+    if (equipCards.length === 0) {
       equipContainer.innerHTML = `
         <div class="pdf-equip-block">
           <table class="pdf-layout-table" style="margin-bottom:0;">
@@ -526,11 +525,53 @@
           </table>
         </div>`;
     } else {
-      makes.forEach((_, i) => {
-        const makeVal = makes[i].value ? makes[i].value.trim() : '\u00A0';
-        const modelVal = models[i].value ? models[i].value.trim() : '\u00A0';
-        const serialVal = serials[i].value ? serials[i].value.trim() : '\u00A0';
-        const descVal = descs[i].value ? descs[i].value.trim() : '\u00A0';
+      equipCards.forEach((card) => {
+        const makeVal = card.querySelector('.inp-equip-make').value.trim() || '\u00A0';
+        const modelVal = card.querySelector('.inp-equip-model').value.trim() || '\u00A0';
+        const serialVal = card.querySelector('.inp-equip-serial').value.trim() || '\u00A0';
+        const descVal = card.querySelector('.inp-equip-desc').value.trim() || '\u00A0';
+
+        const partCards = card.querySelectorAll('.part-card');
+        let partsTableHtml = '';
+
+        if (partCards.length > 0) {
+          let rowsHtml = '';
+          partCards.forEach((partCard) => {
+            const numVal = partCard.querySelector('.inp-part-num').value.trim() || '\u00A0';
+            const partDescVal = partCard.querySelector('.inp-part-desc').value.trim() || '\u00A0';
+            const rawQty = partCard.querySelector('.inp-part-qty').value;
+            const rawPrice = partCard.querySelector('.inp-part-price').value;
+
+            const qtyVal = rawQty !== '' ? rawQty : '\u00A0';
+            const priceVal = rawPrice !== '' ? `$${parseFloat(rawPrice).toFixed(2)}` : '\u00A0';
+
+            rowsHtml += `
+              <tr>
+                <td>${numVal}</td>
+                <td>${partDescVal}</td>
+                <td>${qtyVal}</td>
+                <td>${priceVal}</td>
+              </tr>`;
+          });
+
+          partsTableHtml = `
+            <div style="margin-top: 6px;">
+              <span class="pdf-label" style="font-size: 10px !important;">PARTS REQUIRED:</span>
+              <table class="pdf-table" style="margin-top: 2px;">
+                <thead>
+                  <tr>
+                    <th style="width: 25%;">PART #</th>
+                    <th style="width: 45%;">DESCRIPTION</th>
+                    <th style="width: 12%;">QTY</th>
+                    <th style="width: 18%;">PRICE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
+            </div>`;
+        }
 
         const block = document.createElement('div');
         block.className = 'pdf-equip-block';
@@ -556,44 +597,9 @@
               </td>
             </tr>
           </table>
+          ${partsTableHtml}
         `;
         equipContainer.appendChild(block);
-      });
-    }
-
-    const partsTbody = document.getElementById('pdf-parts-rows');
-    partsTbody.innerHTML = '';
-    const partNums = document.querySelectorAll('.inp-part-num');
-    const partDescs = document.querySelectorAll('.inp-part-desc');
-    const partQtys = document.querySelectorAll('.inp-part-qty');
-    const partPrices = document.querySelectorAll('.inp-part-price');
-
-    if (partNums.length === 0) {
-      partsTbody.innerHTML = `
-        <tr>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>`;
-    } else {
-      partNums.forEach((_, i) => {
-        const numVal = partNums[i].value ? partNums[i].value.trim() : '\u00A0';
-        const descVal = partDescs[i].value ? partDescs[i].value.trim() : '\u00A0';
-        const rawQty = partQtys[i].value;
-        const rawPrice = partPrices[i].value;
-        
-        const qtyVal = rawQty !== '' ? rawQty : '\u00A0';
-        const priceVal = rawPrice !== '' ? `$${parseFloat(rawPrice).toFixed(2)}` : '\u00A0';
-
-        partsTbody.innerHTML += `
-          <tr>
-            <td>${numVal}</td>
-            <td>${descVal}</td>
-            <td>${qtyVal}</td>
-            <td>${priceVal}</td>
-          </tr>
-        `;
       });
     }
 
