@@ -1,159 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Service Quotation Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <style>
-    * { 
-      box-sizing: border-box; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-    }
-    
-    body { 
-      background-color: #f3f4f6; 
-      margin: 0; 
-      padding: 12px; 
-      color: #111827; 
-    }
-    
-    .app-card { 
-      background: #ffffff; 
-      padding: 16px; 
-      border-radius: 8px; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
-      max-width: 600px; 
-      margin: 0 auto; 
-    }
-    
-    h2 { 
-      margin-top: 16px; 
-      margin-bottom: 8px; 
-      font-size: 16px; 
-      border-bottom: 2px solid #2563eb; 
-      padding-bottom: 4px; 
-      color: #1e40af; 
-    }
-    
-    .form-group { 
-      margin-bottom: 12px; 
-    }
-    
-    label { 
-      display: block; 
-      font-size: 11px; 
-      font-weight: 700; 
-      text-transform: uppercase; 
-      margin-bottom: 4px; 
-      color: #374151; 
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Quotation Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+* { 
+box-sizing: border-box; 
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+}
 
-    input[type="text"],
-    input[type="date"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="number"],
-    textarea {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 42px;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 14px;
-      line-height: 1.4;
-      background-color: #ffffff;
-      color: #111827;
-      margin: 0;
-    }
+body { 
+background-color: #f3f4f6; 
+margin: 0; 
+padding: 12px; 
+color: #111827; 
+}
 
-    textarea {
-      height: auto;
-      min-height: 60px;
-    }
+.app-card { 
+background: #ffffff; 
+padding: 16px; 
+border-radius: 8px; 
+box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+max-width: 600px; 
+margin: 0 auto; 
+}
 
-    input[type="date"]::-webkit-date-and-time-value {
-      text-align: left;
-      height: 24px;
-      line-height: 24px;
-    }
+h2 { 
+margin-top: 16px; 
+margin-bottom: 8px; 
+font-size: 16px; 
+border-bottom: 2px solid #2563eb; 
+padding-bottom: 4px; 
+color: #1e40af; 
+}
 
-    .row-2 { 
-      display: flex; 
-      gap: 8px; 
-    }
-    
-    .row-2 > div { 
-      flex: 1; 
-    }
-    
-    .item-block { 
-      background: #f9fafb; 
-      border: 1px solid #e5e7eb; 
-      padding: 10px; 
-      border-radius: 6px; 
-      margin-bottom: 8px; 
-      position: relative; 
-    }
-    
-    .btn-remove { 
-      position: absolute; 
-      top: 6px; 
-      right: 6px; 
-      background: #ef4444; 
-      color: white; 
-      border: none; 
-      border-radius: 4px; 
-      padding: 4px 8px; 
-      font-size: 12px; 
-      cursor: pointer; 
-      z-index: 2;
-    }
-    
-    .btn { 
-      width: 100%; 
-      padding: 12px; 
-      border: none; 
-      border-radius: 6px; 
-      font-weight: bold; 
-      font-size: 15px; 
-      cursor: pointer; 
-      margin-top: 8px; 
-    }
-    
-    .btn-add { background: #e5e7eb; color: #1f2937; margin-bottom: 12px; }
-    .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
-    .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
+.form-group { 
+margin-bottom: 12px; 
+}
 
-    /* PDF Wrapper positioned off-screen normally */
-    #pdf-template-wrapper {
-      position: absolute;
-      left: -9999px;
-      top: 0;
-      width: 750px;
-      background: #ffffff;
-    }
+label { 
+display: block; 
+font-size: 11px; 
+font-weight: 700; 
+text-transform: uppercase; 
+margin-bottom: 4px; 
+color: #374151; 
+}
 
-    /* Standardized Strict PDF Styling */
-    .pdf-page {
-      width: 750px;
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+textarea {
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+width: 100%;
+height: 42px;
+padding: 8px 12px;
+border: 1px solid #d1d5db;
+border-radius: 6px;
+font-size: 14px;
+line-height: 1.4;
+background-color: #ffffff;
+color: #111827;
+margin: 0;
+}
+
+textarea {
+height: auto;
+min-height: 60px;
+}
+
+.row-2 { 
+display: flex; 
+gap: 8px; 
+}
+
+.row-2 > div { 
+flex: 1; 
+}
+
+.equip-card {
+background: #f8fafc;
+border: 2px solid #cbd5e1;
+padding: 12px;
+border-radius: 8px;
+margin-bottom: 16px;
+position: relative;
+}
+
+.item-block { 
+background: #ffffff; 
+border: 1px solid #e2e8f0; 
+padding: 10px; 
+border-radius: 6px; 
+margin-bottom: 8px; 
+position: relative; 
+}
+
+.btn-remove { 
+position: absolute; 
+top: 6px; 
+right: 6px; 
+background: #ef4444; 
+color: white; 
+border: none; 
+border-radius: 4px; 
+padding: 4px 8px; 
+font-size: 12px; 
+cursor: pointer; 
+z-index: 2;
+}
+
+.sub-head {
+font-size: 13px;
+font-weight: 700;
+color: #334155;
+margin: 10px 0 6px 0;
+text-transform: uppercase;
+}
+
+.btn { 
+width: 100%; 
+padding: 12px; 
+border: none; 
+border-radius: 6px; 
+font-weight: bold; 
+font-size: 15px; 
+cursor: pointer; 
+margin-top: 8px; 
+}
+
+.btn-add { background: #e2e8f0; color: #1e293b; margin-bottom: 8px; font-size: 13px; padding: 8px; }
+.btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
+.btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
+
+    /* PDF Printable Layout CSS */
+#pdf-template-wrapper {
+position: absolute;
+left: -9999px;
+top: 0;
+width: 750px;
+background: #ffffff;
+}
+
+.pdf-page {
+width: 750px;
       padding: 30px;
-      background: #ffffff;
+      padding: 24px;
+background: #ffffff;
       color: #111111;
-      font-family: Arial, Helvetica, sans-serif !important;
-      font-size: 11px !important;
+      color: #000000;
+font-family: Arial, Helvetica, sans-serif !important;
+font-size: 11px !important;
       line-height: 1.4;
-      -webkit-text-size-adjust: 100%;
-    }
+      line-height: 1.3;
+}
 
     .pdf-header { 
       border-bottom: 1.5px solid #000000; 
       padding-bottom: 4px; 
       margin-bottom: 8px; 
-    }
+    .pdf-header-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid #000000;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+}
 
     .pdf-layout-table {
       width: 100%;
@@ -167,124 +185,165 @@
       vertical-align: bottom;
       font-size: 11px !important;
       color: #111111;
-      min-height: 20px;
-    }
+    .pdf-header-title {
+      font-size: 16px;
+      font-weight: bold;
+}
 
     .pdf-line-cell {
-      border-bottom: 1px solid #333333;
-    }
+    .pdf-info-row {
+      display: flex;
+border-bottom: 1px solid #333333;
+      padding: 3px 0;
+}
 
-    .pdf-label {
+    .pdf-col-100 { width: 100%; }
+    .pdf-col-50 { width: 50%; }
+
+.pdf-label {
       font-weight: 600;
       font-size: 11px !important;
       color: #000000;
-      text-transform: uppercase;
-    }
+      font-weight: bold;
+text-transform: uppercase;
+      margin-right: 4px;
+}
 
-    .pdf-val {
+.pdf-val {
       font-weight: 400;
       font-size: 11px !important;
       color: #222222;
-      word-break: break-word;
+word-break: break-word;
       display: inline-block;
       min-height: 14px;
-    }
+}
 
-    .pdf-section-head { 
-      background: #e5e7eb; 
+.pdf-section-head { 
+background: #e5e7eb; 
       font-weight: 600; 
-      padding: 4px 6px; 
-      border: 1px solid #333333; 
-      margin-top: 10px; 
+      font-weight: bold; 
+padding: 4px 6px; 
+border: 1px solid #333333; 
+margin-top: 10px; 
       font-size: 11px !important; 
       color: #000000;
-      text-transform: uppercase;
-      page-break-inside: avoid;
-    }
-    
-    .pdf-equip-block { 
-      border: 1px solid #333333; 
-      padding: 6px 8px; 
-      margin-bottom: 6px; 
-      background: #fafafa; 
-      page-break-inside: avoid;
-    }
+      font-size: 11px; 
+text-transform: uppercase;
+}
+
+.pdf-equip-block { 
+border: 1px solid #333333; 
+padding: 8px; 
+margin-top: 8px;
+margin-bottom: 10px; 
+background: #ffffff; 
+page-break-inside: avoid;
+}
+
+.pdf-sub-title {
+      font-weight: 700;
+      font-size: 10px !important;
+      font-weight: bold;
+      font-size: 10px;
+text-transform: uppercase;
+margin-top: 8px;
+      margin-bottom: 2px;
+      margin-bottom: 4px;
+color: #111111;
+}
     
     .pdf-table { 
       width: 100%; 
       border-collapse: collapse; 
       table-layout: fixed;
-      margin-top: 4px; 
-    }
+      margin-top: 2px; 
+      margin-bottom: 4px;
+
+    /* FLEXBOX GRID FOR TABLES */
+    .pdf-grid-row {
+      display: flex !important;
+      width: 100% !important;
+      border-left: 1px solid #333333;
+      border-right: 1px solid #333333;
+      border-bottom: 1px solid #333333;
+}
 
     .pdf-table th, .pdf-table td { 
       border: 1px solid #333333; 
-      padding: 6px; 
+      padding: 4px 6px; 
       text-align: left !important; 
-      font-size: 11px !important; 
+      font-size: 10px !important; 
       color: #111111;
-      height: 24px;
+    .pdf-grid-row.header {
+      background: #f3f4f6;
+      font-weight: bold;
+      border-top: 1px solid #333333;
+      text-transform: uppercase;
     }
 
-    .pdf-table tr {
-      page-break-inside: avoid;
-    }
+    .pdf-cell {
+      padding: 4px 6px;
+      font-size: 10px;
+      box-sizing: border-box;
+      border-right: 1px solid #333333;
+overflow: hidden;
+      word-wrap: break-word;
+      word-break: break-word;
+}
 
     .pdf-table th { 
       background: #f3f4f6; 
       font-weight: 600; 
       text-transform: uppercase; 
-      font-size: 11px !important;
-    }
+    .pdf-cell:last-child {
+      border-right: none;
+}
 
     .text-right { text-align: right !important; }
-  </style>
+    .c-code { width: 25%; }
+    .c-desc { width: 45%; }
+    .c-qty  { width: 12%; }
+    .c-price{ width: 18%; }
+</style>
 </head>
 <body>
 
 <div class="app-card">
-  <h2 style="margin-top:0;">Service Quotation Entry</h2>
-  <button class="btn btn-secondary" onclick="fillSampleData()">⚡ Fill Sample Data</button>
-  
-  <div class="row-2">
-    <div class="form-group"><label>Date</label><input type="date" id="m-date"></div>
-    <div class="form-group"><label>Work Order #</label><input type="text" id="m-wo-num"></div>
-  </div>
-  <div class="form-group"><label>Customer #</label><input type="text" id="m-cust-num"></div>
-  <div class="form-group"><label>Customer Name</label><input type="text" id="m-cust-name"></div>
-  <div class="form-group"><label>Address</label><input type="text" id="m-address"></div>
-  <div class="row-2">
-    <div class="form-group"><label>Phone #</label><input type="tel" id="m-phone"></div>
-    <div class="form-group"><label>Fax #</label><input type="tel" id="m-fax"></div>
-  </div>
-  <div class="form-group"><label>Email</label><input type="email" id="m-email"></div>
+<h2 style="margin-top:0;">Service Quotation Entry</h2>
+<button class="btn btn-secondary" onclick="fillSampleData()">⚡ Fill Sample Data</button>
 
-  <h2>Equipment Details</h2>
-  <div id="m-equipment-list"></div>
-  <button class="btn btn-add" onclick="addEquipmentInput()">+ Add Equipment</button>
+<div class="row-2">
+<div class="form-group"><label>Date</label><input type="date" id="m-date"></div>
+<div class="form-group"><label>Work Order #</label><input type="text" id="m-wo-num"></div>
+</div>
+<div class="form-group"><label>Customer #</label><input type="text" id="m-cust-num"></div>
+<div class="form-group"><label>Customer Name</label><input type="text" id="m-cust-name"></div>
+<div class="form-group"><label>Address</label><input type="text" id="m-address"></div>
+<div class="row-2">
+<div class="form-group"><label>Phone #</label><input type="tel" id="m-phone"></div>
+<div class="form-group"><label>Fax #</label><input type="tel" id="m-fax"></div>
+</div>
+<div class="form-group"><label>Email</label><input type="email" id="m-email"></div>
 
-  <h2>Parts</h2>
-  <div id="m-parts-list"></div>
-  <button class="btn btn-add" onclick="addPartInput()">+ Add Part Row</button>
+<h2>Equipment & Parts Breakdown</h2>
+<div id="m-equipment-list"></div>
+<button class="btn btn-add" style="font-size:14px; padding:10px; background:#cbd5e1;" onclick="addEquipmentInput()">+ Add Equipment Unit</button>
 
-  <h2>Labour Charges</h2>
-  <div id="m-labour-list"></div>
-  <button class="btn btn-add" onclick="addLabourInput()">+ Add Labour Row</button>
+<h2>Additional Info</h2>
+<div class="form-group"><label>Additional Comments</label><textarea id="m-comments" rows="2"></textarea></div>
+<div class="form-group"><label>Service Tech</label><input type="text" id="m-tech"></div>
 
-  <h2>Additional Info</h2>
-  <div class="form-group"><label>Additional Comments</label><textarea id="m-comments" rows="2"></textarea></div>
-  <div class="form-group"><label>Service Tech</label><input type="text" id="m-tech"></div>
-
-  <button class="btn btn-primary" onclick="generatePDF()">Download PDF</button>
+<button class="btn btn-primary" onclick="generatePDF()">Download PDF</button>
 </div>
 
+<!-- PDF Export Wrapper -->
 <div id="pdf-template-wrapper">
-  <div class="pdf-page" id="pdf-content">
-    
+<div class="pdf-page" id="pdf-content">
+
     <table class="pdf-layout-table pdf-header">
       <tr>
-        <td style="font-size: 16px !important; font-weight: bold; padding: 0;">SERVICE QUOTATION</td>
-        <td class="text-right" style="padding: 0;">
+        <td style="font-size: 16px !important; font-weight: bold; padding: 0; width: 60%;">SERVICE QUOTATION</td>
+        <td class="text-right" style="padding: 0; width: 40%;">
           <span class="pdf-label">DATE:</span> <span class="pdf-val" id="pdf-date"></span>
         </td>
       </tr>
@@ -323,35 +382,43 @@
         </td>
       </tr>
     </table>
+    <div class="pdf-header-row">
+      <div class="pdf-header-title">SERVICE QUOTATION</div>
+      <div><span class="pdf-label">DATE:</span><span class="pdf-val" id="pdf-date"></span></div>
+    </div>
 
-    <div class="pdf-section-head">EQUIPMENT & WORK REQUIRED</div>
-    <div id="pdf-equipment-container" style="margin-top: 4px;"></div>
+    <div class="pdf-info-row pdf-col-100">
+      <span class="pdf-label">WORK ORDER #:</span><span class="pdf-val" id="pdf-wo-num"></span>
+    </div>
+    
+    <div style="display:flex;">
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">CUSTOMER #:</span><span class="pdf-val" id="pdf-cust-num"></span>
+      </div>
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">CUSTOMER NAME:</span><span class="pdf-val" id="pdf-cust-name"></span>
+      </div>
+    </div>
 
-    <div class="pdf-section-head">PARTS</div>
-    <table class="pdf-table">
-      <thead>
-        <tr>
-          <th style="width: 25%;">PART #'S</th>
-          <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%;">QTY</th>
-          <th style="width: 18%;">PRICE</th>
-        </tr>
-      </thead>
-      <tbody id="pdf-parts-rows"></tbody>
-    </table>
+    <div class="pdf-info-row pdf-col-100">
+      <span class="pdf-label">ADDRESS:</span><span class="pdf-val" id="pdf-address"></span>
+    </div>
 
-    <div class="pdf-section-head">LABOUR CHARGES</div>
-    <table class="pdf-table">
-      <thead>
-        <tr>
-          <th style="width: 25%;">LABOUR CHARGES</th>
-          <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%;"># OF HOURS</th>
-          <th style="width: 18%;">PRICE</th>
-        </tr>
-      </thead>
-      <tbody id="pdf-labour-rows"></tbody>
-    </table>
+    <div style="display:flex;">
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">PHONE #:</span><span class="pdf-val" id="pdf-phone"></span>
+      </div>
+      <div class="pdf-info-row pdf-col-50">
+        <span class="pdf-label">FAX #:</span><span class="pdf-val" id="pdf-fax"></span>
+      </div>
+    </div>
+
+    <div class="pdf-info-row pdf-col-100">
+      <span class="pdf-label">EMAIL:</span><span class="pdf-val" id="pdf-email"></span>
+    </div>
+
+<div class="pdf-section-head">EQUIPMENT & PARTS DETAILS</div>
+<div id="pdf-equipment-container"></div>
 
     <table class="pdf-layout-table" style="margin-top: 8px; page-break-inside: avoid;">
       <tr>
@@ -373,971 +440,349 @@
         </td>
       </tr>
     </table>
+    <div class="pdf-info-row pdf-col-100" style="margin-top: 8px; flex-direction: column; border-bottom: none;">
+      <span class="pdf-label">ADDITIONAL COMMENTS:</span>
+      <div style="border-bottom: 1px solid #333333; min-height: 20px; margin-top: 2px;" id="pdf-comments" class="pdf-val"></div>
+    </div>
 
-  </div>
+    <div style="display:flex; margin-top: 12px; border-top: 1px solid #333333; padding-top: 6px; page-break-inside: avoid;">
+      <div class="pdf-col-50"><span class="pdf-label">CUSTOMER ACCEPTED:</span> <span class="pdf-val">[ ] PLEASE CHECK</span></div>
+      <div class="pdf-col-50"><span class="pdf-label">WORK COMPLETED:</span> <span class="pdf-val">[ ]</span></div>
+    </div>
+    
+    <div class="pdf-info-row pdf-col-100" style="margin-top: 6px;">
+      <span class="pdf-label">SERVICE TECH:</span><span class="pdf-val" id="pdf-tech"></span>
+    </div>
+
+</div>
 </div>
 
 <script>
-  document.getElementById('m-date').valueAsDate = new Date();
+document.getElementById('m-date').valueAsDate = new Date();
 
-  function getSafeVal(id) {
-    const el = document.getElementById(id);
-    if (!el) return '\u00A0';
-    const val = el.value ? el.value.trim() : '';
-    return val !== '' ? val : '\u00A0';
-  }
+function getSafeVal(id) {
+const el = document.getElementById(id);
+if (!el) return '\u00A0';
+const val = el.value ? el.value.trim() : '';
+return val !== '' ? val : '\u00A0';
+}
 
-  function addEquipmentInput() {
-    const list = document.getElementById('m-equipment-list');
-    const div = document.createElement('div');
-    div.className = 'item-block';
-    div.innerHTML = `
-      <button class="btn-remove" onclick="removeEquipmentRow(this)">X</button>
-      <div class="row-2">
-        <div class="form-group"><label>Make</label><input type="text" class="inp-equip-make"></div>
-        <div class="form-group"><label>Model</label><input type="text" class="inp-equip-model"></div>
-      </div>
-      <div class="form-group"><label>Serial #</label><input type="text" class="inp-equip-serial"></div>
-      <div class="form-group"><label>Description of Service Required</label><textarea class="inp-equip-desc" rows="2"></textarea></div>
-    `;
-    list.appendChild(div);
-  }
+function addEquipmentInput() {
+const list = document.getElementById('m-equipment-list');
+const div = document.createElement('div');
+div.className = 'equip-card';
+div.innerHTML = `
+     <button class="btn-remove" onclick="removeEquipmentRow(this)">Remove Equipment</button>
+     <div class="row-2">
+       <div class="form-group"><label>Make</label><input type="text" class="inp-equip-make"></div>
+       <div class="form-group"><label>Model</label><input type="text" class="inp-equip-model"></div>
+     </div>
+     <div class="form-group"><label>Serial #</label><input type="text" class="inp-equip-serial"></div>
+     <div class="form-group"><label>Description of Service Required</label><textarea class="inp-equip-desc" rows="2"></textarea></div>
+     
+     <div class="sub-head">Parts for this Equipment</div>
+     <div class="container-parts"></div>
+     <button class="btn btn-add" onclick="addPartToEquip(this)">+ Add Part</button>
 
-  function removeEquipmentRow(btn) {
-    const list = document.getElementById('m-equipment-list');
-    if (list.children.length > 1) {
-      btn.parentElement.remove();
-    } else {
-      alert('At least one equipment block must remain.');
-    }
-  }
+     <div class="sub-head">Labour for this Equipment</div>
+     <div class="container-labour"></div>
+     <button class="btn btn-add" onclick="addLabourToEquip(this)">+ Add Labour</button>
+   `;
+list.appendChild(div);
+}
 
-  function addPartInput() {
-    const div = document.createElement('div');
-    div.className = 'item-block';
-    div.innerHTML = `
-      <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-      <div class="form-group"><label>Part #</label><input type="text" class="inp-part-num"></div>
-      <div class="form-group"><label>Description</label><input type="text" class="inp-part-desc"></div>
-      <div class="row-2">
-        <div class="form-group"><label>Qty</label><input type="number" class="inp-part-qty" value="1"></div>
-        <div class="form-group"><label>Price ($)</label><input type="number" class="inp-part-price" step="0.01" placeholder="0.00"></div>
-      </div>
-    `;
-    document.getElementById('m-parts-list').appendChild(div);
-  }
+function removeEquipmentRow(btn) {
+const list = document.getElementById('m-equipment-list');
+if (list.children.length > 1) {
+btn.parentElement.remove();
+} else {
+alert('At least one equipment unit must remain.');
+}
+}
 
-  function addLabourInput() {
-    const div = document.createElement('div');
-    div.className = 'item-block';
-    div.innerHTML = `
-      <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-      <div class="form-group"><label>Labour Code</label><input type="text" class="inp-labour-code"></div>
-      <div class="form-group"><label>Description</label><input type="text" class="inp-labour-desc"></div>
-      <div class="row-2">
-        <div class="form-group"><label>Hours</label><input type="number" class="inp-labour-hours" step="0.5" value="1"></div>
-        <div class="form-group"><label>Rate ($/hr)</label><input type="number" class="inp-labour-rate" step="0.01" placeholder="0.00"></div>
-      </div>
-    `;
-    document.getElementById('m-labour-list').appendChild(div);
-  }
+function addPartToEquip(btn) {
+const container = btn.previousElementSibling;
+const div = document.createElement('div');
+div.className = 'item-block';
+div.innerHTML = `
+     <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+     <div class="form-group"><label>Part #</label><input type="text" class="inp-part-num"></div>
+     <div class="form-group"><label>Description</label><input type="text" class="inp-part-desc"></div>
+     <div class="row-2">
+       <div class="form-group"><label>Qty</label><input type="number" class="inp-part-qty" value="1"></div>
+       <div class="form-group"><label>Price ($)</label><input type="number" class="inp-part-price" step="0.01" placeholder="0.00"></div>
+     </div>
+   `;
+container.appendChild(div);
+}
 
-  addEquipmentInput();
-  addPartInput();
-  addLabourInput();
+function addLabourToEquip(btn) {
+const container = btn.previousElementSibling;
+const div = document.createElement('div');
+div.className = 'item-block';
+div.innerHTML = `
+     <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+     <div class="form-group"><label>Labour Code</label><input type="text" class="inp-labour-code"></div>
+     <div class="form-group"><label>Description</label><input type="text" class="inp-labour-desc"></div>
+     <div class="row-2">
+       <div class="form-group"><label>Hours</label><input type="number" class="inp-labour-hours" step="0.5" value="1"></div>
+       <div class="form-group"><label>Rate ($/hr)</label><input type="number" class="inp-labour-rate" step="0.01" placeholder="0.00"></div>
+     </div>
+   `;
+container.appendChild(div);
+}
 
-  function fillSampleData() {
-    document.getElementById('m-wo-num').value = 'W0075009';
-    document.getElementById('m-cust-num').value = '05362';
-    document.getElementById('m-cust-name').value = 'Element Hotel';
-    document.getElementById('m-address').value = '479 Roncesvalles Avenue';
-    document.getElementById('m-phone').value = '416-889-4420';
-    document.getElementById('m-fax').value = '';
-    document.getElementById('m-email').value = '';
+addEquipmentInput();
 
-    document.getElementById('m-equipment-list').innerHTML = '';
-    addEquipmentInput();
-    document.querySelectorAll('.inp-equip-make')[0].value = 'Maytag';
-    document.querySelectorAll('.inp-equip-model')[0].value = 'MAT14CSAWW1';
-    document.querySelectorAll('.inp-equip-serial')[0].value = 'C22560383';
-    document.querySelectorAll('.inp-equip-desc')[0].value = 'The washer needs a new motor and belt';
+function fillSampleData() {
+document.getElementById('m-wo-num').value = 'W0075009';
+document.getElementById('m-cust-num').value = '05362';
+document.getElementById('m-cust-name').value = 'Element Hotel';
+document.getElementById('m-address').value = '479 Roncesvalles Avenue';
+document.getElementById('m-phone').value = '416-889-4420';
+document.getElementById('m-fax').value = '';
+document.getElementById('m-email').value = '';
 
-    document.getElementById('m-parts-list').innerHTML = '';
-    addPartInput();
-    document.querySelectorAll('.inp-part-num')[0].value = 'W10210383';
-    document.querySelectorAll('.inp-part-desc')[0].value = 'Drive Motor';
-    document.querySelectorAll('.inp-part-qty')[0].value = '1';
-    document.querySelectorAll('.inp-part-price')[0].value = '145.00';
+const list = document.getElementById('m-equipment-list');
+list.innerHTML = '';
 
-    addPartInput();
-    document.querySelectorAll('.inp-part-num')[1].value = 'W10006384';
-    document.querySelectorAll('.inp-part-desc')[1].value = 'Drive Belt';
-    document.querySelectorAll('.inp-part-qty')[1].value = '1';
-    document.querySelectorAll('.inp-part-price')[1].value = '28.50';
+addEquipmentInput();
+const card1 = list.children[0];
+card1.querySelector('.inp-equip-make').value = 'Maytag';
+card1.querySelector('.inp-equip-model').value = 'MAT14CSAWW1';
+card1.querySelector('.inp-equip-serial').value = 'C22560383';
+card1.querySelector('.inp-equip-desc').value = 'Washer noisy during spin cycle.';
 
-    document.getElementById('m-labour-list').innerHTML = '';
-    addLabourInput();
-    document.querySelectorAll('.inp-labour-code')[0].value = 'LAB-01';
-    document.querySelectorAll('.inp-labour-desc')[0].value = 'Onsite Service';
-    document.querySelectorAll('.inp-labour-hours')[0].value = '1.5';
-    document.querySelectorAll('.inp-labour-rate')[0].value = '85.00';
+const btnPart1 = card1.querySelectorAll('.btn-add')[0];
+addPartToEquip(btnPart1);
+addPartToEquip(btnPart1);
+const parts1 = card1.querySelectorAll('.container-parts .item-block');
+parts1[0].querySelector('.inp-part-num').value = 'W10210383';
+parts1[0].querySelector('.inp-part-desc').value = 'Drive Motor';
+parts1[0].querySelector('.inp-part-qty').value = '1';
+parts1[0].querySelector('.inp-part-price').value = '145.00';
+parts1[1].querySelector('.inp-part-num').value = 'W10006384';
+parts1[1].querySelector('.inp-part-desc').value = 'Drive Belt';
+parts1[1].querySelector('.inp-part-qty').value = '1';
+parts1[1].querySelector('.inp-part-price').value = '28.50';
 
-    document.getElementById('m-comments').value = 'Parts on order.';
-    document.getElementById('m-tech').value = 'Carlos M.';
-  }
+const btnLabour1 = card1.querySelectorAll('.btn-add')[1];
+addLabourToEquip(btnLabour1);
+const labour1 = card1.querySelectorAll('.container-labour .item-block');
+labour1[0].querySelector('.inp-labour-code').value = 'LAB-01';
+labour1[0].querySelector('.inp-labour-desc').value = 'Washer Repair Labour';
+labour1[0].querySelector('.inp-labour-hours').value = '1.5';
+labour1[0].querySelector('.inp-labour-rate').value = '85.00';
 
-  async function generatePDF() {
-    document.getElementById('pdf-date').innerText = getSafeVal('m-date');
-    document.getElementById('pdf-wo-num').innerText = getSafeVal('m-wo-num');
-    document.getElementById('pdf-cust-num').innerText = getSafeVal('m-cust-num');
-    document.getElementById('pdf-cust-name').innerText = getSafeVal('m-cust-name');
-    document.getElementById('pdf-address').innerText = getSafeVal('m-address');
-    document.getElementById('pdf-phone').innerText = getSafeVal('m-phone');
-    document.getElementById('pdf-fax').innerText = getSafeVal('m-fax');
-    document.getElementById('pdf-email').innerText = getSafeVal('m-email');
-    document.getElementById('pdf-comments').innerText = getSafeVal('m-comments');
-    document.getElementById('pdf-tech').innerText = getSafeVal('m-tech');
+addEquipmentInput();
+const card2 = list.children[1];
+card2.querySelector('.inp-equip-make').value = 'Maytag';
+card2.querySelector('.inp-equip-model').value = 'MDG18CSAWW1';
+card2.querySelector('.inp-equip-serial').value = 'D88472910';
+card2.querySelector('.inp-equip-desc').value = 'Dryer not heating.';
 
-    const equipContainer = document.getElementById('pdf-equipment-container');
-    equipContainer.innerHTML = '';
-    const makes = document.querySelectorAll('.inp-equip-make');
-    const models = document.querySelectorAll('.inp-equip-model');
-    const serials = document.querySelectorAll('.inp-equip-serial');
-    const descs = document.querySelectorAll('.inp-equip-desc');
+const btnPart2 = card2.querySelectorAll('.btn-add')[0];
+addPartToEquip(btnPart2);
+const parts2 = card2.querySelectorAll('.container-parts .item-block');
+parts2[0].querySelector('.inp-part-num').value = 'WP33001852';
+parts2[0].querySelector('.inp-part-desc').value = 'Heating Element';
+parts2[0].querySelector('.inp-part-qty').value = '1';
+parts2[0].querySelector('.inp-part-price').value = '62.00';
 
-    if (makes.length === 0) {
-      equipContainer.innerHTML = `
-        <div class="pdf-equip-block">
-          <table class="pdf-layout-table" style="margin-bottom:0;">
+document.getElementById('m-comments').value = 'All parts currently in stock.';
+document.getElementById('m-tech').value = 'Carlos M.';
+}
+
+async function generatePDF() {
+document.getElementById('pdf-date').innerText = getSafeVal('m-date');
+document.getElementById('pdf-wo-num').innerText = getSafeVal('m-wo-num');
+document.getElementById('pdf-cust-num').innerText = getSafeVal('m-cust-num');
+document.getElementById('pdf-cust-name').innerText = getSafeVal('m-cust-name');
+document.getElementById('pdf-address').innerText = getSafeVal('m-address');
+document.getElementById('pdf-phone').innerText = getSafeVal('m-phone');
+document.getElementById('pdf-fax').innerText = getSafeVal('m-fax');
+document.getElementById('pdf-email').innerText = getSafeVal('m-email');
+document.getElementById('pdf-comments').innerText = getSafeVal('m-comments');
+document.getElementById('pdf-tech').innerText = getSafeVal('m-tech');
+
+const equipContainer = document.getElementById('pdf-equipment-container');
+equipContainer.innerHTML = '';
+
+const equipCards = document.querySelectorAll('#m-equipment-list .equip-card');
+
+equipCards.forEach((card, index) => {
+const makeVal = card.querySelector('.inp-equip-make').value.trim() || '\u00A0';
+const modelVal = card.querySelector('.inp-equip-model').value.trim() || '\u00A0';
+const serialVal = card.querySelector('.inp-equip-serial').value.trim() || '\u00A0';
+const descVal = card.querySelector('.inp-equip-desc').value.trim() || '\u00A0';
+
+const block = document.createElement('div');
+block.className = 'pdf-equip-block';
+
+let partRowsHtml = '';
+const partBlocks = card.querySelectorAll('.container-parts .item-block');
+if (partBlocks.length === 0) {
+        partRowsHtml = `<tr><td colspan="4">&nbsp;</td></tr>`;
+        partRowsHtml = `<div class="pdf-grid-row"><div class="pdf-cell" style="width:100%">&nbsp;</div></div>`;
+} else {
+partBlocks.forEach(pb => {
+const num = pb.querySelector('.inp-part-num').value.trim() || '\u00A0';
+const desc = pb.querySelector('.inp-part-desc').value.trim() || '\u00A0';
+const qty = pb.querySelector('.inp-part-qty').value;
+const price = pb.querySelector('.inp-part-price').value;
+const priceStr = price !== '' ? `$${parseFloat(price).toFixed(2)}` : '\u00A0';
+
+partRowsHtml += `
             <tr>
-              <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MAKE:</span> <span class="pdf-val">&nbsp;</span></td>
-              <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MODEL:</span> <span class="pdf-val">&nbsp;</span></td>
+              <td style="width: 25%;">${num}</td>
+              <td style="width: 45%;">${desc}</td>
+              <td style="width: 12%;">${qty !== '' ? qty : '\u00A0'}</td>
+              <td style="width: 18%;">${priceStr}</td>
             </tr>
-            <tr>
-              <td colspan="2" class="pdf-line-cell"><span class="pdf-label">SERIAL #:</span> <span class="pdf-val">&nbsp;</span></td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top: 4px;"><span class="pdf-label">WORK REQUIRED:</span> <div class="pdf-val" style="padding-left: 2px; margin-top: 2px;">&nbsp;</div></td>
-            </tr>
-          </table>
-        </div>`;
-    } else {
-      makes.forEach((_, i) => {
-        const makeVal = makes[i].value ? makes[i].value.trim() : '\u00A0';
-        const modelVal = models[i].value ? models[i].value.trim() : '\u00A0';
-        const serialVal = serials[i].value ? serials[i].value.trim() : '\u00A0';
-        const descVal = descs[i].value ? descs[i].value.trim() : '\u00A0';
+            <div class="pdf-grid-row">
+              <div class="pdf-cell c-code">${num}</div>
+              <div class="pdf-cell c-desc">${desc}</div>
+              <div class="pdf-cell c-qty">${qty !== '' ? qty : '\u00A0'}</div>
+              <div class="pdf-cell c-price">${priceStr}</div>
+            </div>
+         `;
+});
+}
 
-        const block = document.createElement('div');
-        block.className = 'pdf-equip-block';
-        block.innerHTML = `
-          <table class="pdf-layout-table" style="margin-bottom:0;">
-            <tr>
-              <td style="width: 50%;" class="pdf-line-cell">
-                <span class="pdf-label">MAKE:</span> <span class="pdf-val">${makeVal}</span>
-              </td>
-              <td style="width: 50%;" class="pdf-line-cell">
-                <span class="pdf-label">MODEL:</span> <span class="pdf-val">${modelVal}</span>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" class="pdf-line-cell">
-                <span class="pdf-label">SERIAL #:</span> <span class="pdf-val">${serialVal}</span>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top: 4px;">
-                <span class="pdf-label">WORK REQUIRED:</span>
-                <div class="pdf-val" style="padding-left: 2px; margin-top: 2px;">${descVal}</div>
-              </td>
-            </tr>
-          </table>
-        `;
-        equipContainer.appendChild(block);
-      });
-    }
+let labourRowsHtml = '';
+const labourBlocks = card.querySelectorAll('.container-labour .item-block');
+if (labourBlocks.length === 0) {
+        labourRowsHtml = `<tr><td colspan="4">&nbsp;</td></tr>`;
+        labourRowsHtml = `<div class="pdf-grid-row"><div class="pdf-cell" style="width:100%">&nbsp;</div></div>`;
+} else {
+labourBlocks.forEach(lb => {
+const code = lb.querySelector('.inp-labour-code').value.trim() || '\u00A0';
+const desc = lb.querySelector('.inp-labour-desc').value.trim() || '\u00A0';
+const hrs = lb.querySelector('.inp-labour-hours').value;
+const rate = lb.querySelector('.inp-labour-rate').value;
+const rateStr = rate !== '' ? `$${parseFloat(rate).toFixed(2)}` : '\u00A0';
 
-    const partsTbody = document.getElementById('pdf-parts-rows');
-    partsTbody.innerHTML = '';
-    const partNums = document.querySelectorAll('.inp-part-num');
-    const partDescs = document.querySelectorAll('.inp-part-desc');
-    const partQtys = document.querySelectorAll('.inp-part-qty');
-    const partPrices = document.querySelectorAll('.inp-part-price');
+labourRowsHtml += `
+            <tr>
+              <td style="width: 25%;">${code}</td>
+              <td style="width: 45%;">${desc}</td>
+              <td style="width: 12%;">${hrs !== '' ? hrs : '\u00A0'}</td>
+              <td style="width: 18%;">${rateStr}</td>
+            </tr>
+            <div class="pdf-grid-row">
+              <div class="pdf-cell c-code">${code}</div>
+              <div class="pdf-cell c-desc">${desc}</div>
+              <div class="pdf-cell c-qty">${hrs !== '' ? hrs : '\u00A0'}</div>
+              <div class="pdf-cell c-price">${rateStr}</div>
+            </div>
+         `;
+});
+}
 
-    if (partNums.length === 0) {
-      partsTbody.innerHTML = `
-        <tr>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>`;
-    } else {
-      partNums.forEach((_, i) => {
-        const numVal = partNums[i].value ? partNums[i].value.trim() : '\u00A0';
-        const descVal = partDescs[i].value ? partDescs[i].value.trim() : '\u00A0';
-        const rawQty = partQtys[i].value;
-        const rawPrice = partPrices[i].value;
-        
-        const qtyVal = rawQty !== '' ? rawQty : '\u00A0';
-        const priceVal = rawPrice !== '' ? `$${parseFloat(rawPrice).toFixed(2)}` : '\u00A0';
-
-        partsTbody.innerHTML += `
+block.innerHTML = `
+        <table class="pdf-layout-table" style="margin-bottom:2px;">
           <tr>
-            <td>${numVal}</td>
-            <td>${descVal}</td>
-            <td>${qtyVal}</td>
-            <td>${priceVal}</td>
+            <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MAKE:</span> <span class="pdf-val">${makeVal}</span></td>
+            <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MODEL:</span> <span class="pdf-val">${modelVal}</span></td>
           </tr>
-        `;
-      });
-    }
-
-    const labourTbody = document.getElementById('pdf-labour-rows');
-    labourTbody.innerHTML = '';
-    const labourCodes = document.querySelectorAll('.inp-labour-code');
-    const labourDescs = document.querySelectorAll('.inp-labour-desc');
-    const labourHours = document.querySelectorAll('.inp-labour-hours');
-    const labourRates = document.querySelectorAll('.inp-labour-rate');
-
-    if (labourCodes.length === 0) {
-      labourTbody.innerHTML = `
-        <tr>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>`;
-    } else {
-      labourCodes.forEach((_, i) => {
-        const codeVal = labourCodes[i].value ? labourCodes[i].value.trim() : '\u00A0';
-        const descVal = labourDescs[i].value ? labourDescs[i].value.trim() : '\u00A0';
-        const rawHrs = labourHours[i].value;
-        const rawRate = labourRates[i].value;
-
-        const hrsVal = rawHrs !== '' ? rawHrs : '\u00A0';
-        const rateVal = rawRate !== '' ? `$${parseFloat(rawRate).toFixed(2)}` : '\u00A0';
-
-        labourTbody.innerHTML += `
           <tr>
-            <td>${codeVal}</td>
-            <td>${descVal}</td>
-            <td>${hrsVal}</td>
-            <td>${rateVal}</td>
+            <td colspan="2" class="pdf-line-cell"><span class="pdf-label">SERIAL #:</span> <span class="pdf-val">${serialVal}</span></td>
           </tr>
-        `;
-      });
-    }
+          <tr>
+            <td colspan="2" style="padding-top: 2px;"><span class="pdf-label">WORK REQUIRED:</span> <div class="pdf-val" style="padding-left: 2px;">${descVal}</div></td>
+          </tr>
+        </table>
+        <div style="display:flex;">
+          <div class="pdf-info-row pdf-col-50"><span class="pdf-label">MAKE:</span><span class="pdf-val">${makeVal}</span></div>
+          <div class="pdf-info-row pdf-col-50"><span class="pdf-label">MODEL:</span><span class="pdf-val">${modelVal}</span></div>
+        </div>
+        <div class="pdf-info-row pdf-col-100">
+          <span class="pdf-label">SERIAL #:</span><span class="pdf-val">${serialVal}</span>
+        </div>
+        <div class="pdf-info-row pdf-col-100" style="border-bottom:none;">
+          <span class="pdf-label">WORK REQUIRED:</span><span class="pdf-val">${descVal}</span>
+        </div>
 
-    const wrapper = document.getElementById('pdf-template-wrapper');
-    const element = document.getElementById('pdf-content');
+       <div class="pdf-sub-title">PARTS (EQUIPMENT #${index + 1})</div>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">PART #'S</th>
+              <th style="width: 45%;">DESCRIPTION</th>
+              <th style="width: 12%;">QTY</th>
+              <th style="width: 18%;">PRICE</th>
+            </tr>
+          </thead>
+          <tbody>${partRowsHtml}</tbody>
+        </table>
+        <div class="pdf-grid-row header">
+          <div class="pdf-cell c-code">PART #'S</div>
+          <div class="pdf-cell c-desc">DESCRIPTION</div>
+          <div class="pdf-cell c-qty">QTY</div>
+          <div class="pdf-cell c-price">PRICE</div>
+        </div>
+        ${partRowsHtml}
 
-    // Make target visible at top-left of page for accurate canvas capture
-    wrapper.style.left = '0px';
-    wrapper.style.top = '0px';
-    wrapper.style.position = 'fixed';
-    wrapper.style.zIndex = '99999';
+       <div class="pdf-sub-title">LABOUR (EQUIPMENT #${index + 1})</div>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">CODE</th>
+              <th style="width: 45%;">DESCRIPTION</th>
+              <th style="width: 12%;">HOURS</th>
+              <th style="width: 18%;">RATE</th>
+            </tr>
+          </thead>
+          <tbody>${labourRowsHtml}</tbody>
+        </table>
+        <div class="pdf-grid-row header">
+          <div class="pdf-cell c-code">CODE</div>
+          <div class="pdf-cell c-desc">DESCRIPTION</div>
+          <div class="pdf-cell c-qty">HOURS</div>
+          <div class="pdf-cell c-price">RATE</div>
+        </div>
+        ${labourRowsHtml}
+     `;
+
+equipContainer.appendChild(block);
+});
+
+const wrapper = document.getElementById('pdf-template-wrapper');
+const element = document.getElementById('pdf-content');
+
+wrapper.style.left = '0px';
+wrapper.style.top = '0px';
+wrapper.style.position = 'fixed';
+wrapper.style.zIndex = '99999';
 
     const fullHeight = element.scrollHeight;
 
-    const opt = {
-      margin:       [0.2, 0.2, 0.2, 0.2],
-      filename:     `Quotation_${document.getElementById('m-wo-num').value || 'Draft'}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { 
-        scale: 2, 
-        scrollX: 0, 
-        scrollY: 0,
-        windowWidth: 750,
+const opt = {
+margin:       [0.2, 0.2, 0.2, 0.2],
+filename:     `Quotation_${document.getElementById('m-wo-num').value || 'Draft'}.pdf`,
+image:        { type: 'jpeg', quality: 0.98 },
+html2canvas:  { 
+scale: 2, 
+scrollX: 0, 
+scrollY: 0,
+windowWidth: 750,
         height: fullHeight,
         useCORS: true,
         letterRendering: true
-      },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-    };
+        useCORS: true
+},
+jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+};
 
-    try {
-      await html2pdf().set(opt).from(element).save();
-    } finally {
-      wrapper.style.left = '-9999px';
-      wrapper.style.position = 'absolute';
-      wrapper.style.zIndex = 'auto';
-    }
-  }
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Service Quotation Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <style>
-    * { 
-      box-sizing: border-box; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-    }
-    
-    body { 
-      background-color: #f3f4f6; 
-      margin: 0; 
-      padding: 12px; 
-      color: #111827; 
-    }
-    
-    .app-card { 
-      background: #ffffff; 
-      padding: 16px; 
-      border-radius: 8px; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
-      max-width: 600px; 
-      margin: 0 auto; 
-    }
-    
-    h2 { 
-      margin-top: 16px; 
-      margin-bottom: 8px; 
-      font-size: 16px; 
-      border-bottom: 2px solid #2563eb; 
-      padding-bottom: 4px; 
-      color: #1e40af; 
-    }
-    
-    .form-group { 
-      margin-bottom: 12px; 
-    }
-    
-    label { 
-      display: block; 
-      font-size: 11px; 
-      font-weight: 700; 
-      text-transform: uppercase; 
-      margin-bottom: 4px; 
-      color: #374151; 
-    }
-
-    input[type="text"],
-    input[type="date"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="number"],
-    textarea {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 42px;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 14px;
-      line-height: 1.4;
-      background-color: #ffffff;
-      color: #111827;
-      margin: 0;
-    }
-
-    textarea {
-      height: auto;
-      min-height: 60px;
-    }
-
-    input[type="date"]::-webkit-date-and-time-value {
-      text-align: left;
-      height: 24px;
-      line-height: 24px;
-    }
-
-    .row-2 { 
-      display: flex; 
-      gap: 8px; 
-    }
-    
-    .row-2 > div { 
-      flex: 1; 
-    }
-    
-    .item-block { 
-      background: #f9fafb; 
-      border: 1px solid #e5e7eb; 
-      padding: 10px; 
-      border-radius: 6px; 
-      margin-bottom: 8px; 
-      position: relative; 
-    }
-    
-    .btn-remove { 
-      position: absolute; 
-      top: 6px; 
-      right: 6px; 
-      background: #ef4444; 
-      color: white; 
-      border: none; 
-      border-radius: 4px; 
-      padding: 4px 8px; 
-      font-size: 12px; 
-      cursor: pointer; 
-      z-index: 2;
-    }
-    
-    .btn { 
-      width: 100%; 
-      padding: 12px; 
-      border: none; 
-      border-radius: 6px; 
-      font-weight: bold; 
-      font-size: 15px; 
-      cursor: pointer; 
-      margin-top: 8px; 
-    }
-    
-    .btn-add { background: #e5e7eb; color: #1f2937; margin-bottom: 12px; }
-    .btn-secondary { background: #10b981; color: #ffffff; font-size: 15px; margin-bottom: 12px; }
-    .btn-primary { background: #2563eb; color: #ffffff; font-size: 16px; }
-
-    #pdf-template-wrapper {
-      position: absolute;
-      left: -9999px;
-      top: 0;
-      width: 750px;
-      background: #ffffff;
-    }
-
-    .pdf-page {
-      width: 750px;
-      padding: 30px;
-      background: #ffffff;
-      color: #111111;
-      font-family: Arial, Helvetica, sans-serif !important;
-      font-size: 11px !important;
-      line-height: 1.4;
-      -webkit-text-size-adjust: 100%;
-    }
-
-    .pdf-header { 
-      border-bottom: 1.5px solid #000000; 
-      padding-bottom: 4px; 
-      margin-bottom: 8px; 
-    }
-
-    .pdf-layout-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      margin-bottom: 6px;
-    }
-    
-    .pdf-layout-table td {
-      padding: 4px 2px;
-      vertical-align: bottom;
-      font-size: 11px !important;
-      color: #111111;
-      min-height: 20px;
-    }
-
-    .pdf-line-cell {
-      border-bottom: 1px solid #333333;
-    }
-
-    .pdf-label {
-      font-weight: 600;
-      font-size: 11px !important;
-      color: #000000;
-      text-transform: uppercase;
-    }
-
-    .pdf-val {
-      font-weight: 400;
-      font-size: 11px !important;
-      color: #222222;
-      word-break: break-word;
-      display: inline-block;
-      min-height: 14px;
-    }
-
-    /* Bold rule for additional info comments */
-    #pdf-comments {
-      font-weight: bold !important;
-      color: #000000 !important;
-    }
-
-    .pdf-section-head { 
-      background: #e5e7eb; 
-      font-weight: 600; 
-      padding: 4px 6px; 
-      border: 1px solid #333333; 
-      margin-top: 10px; 
-      font-size: 11px !important; 
-      color: #000000;
-      text-transform: uppercase;
-      page-break-inside: avoid;
-    }
-    
-    .pdf-equip-block { 
-      border: 1px solid #333333; 
-      padding: 6px 8px; 
-      margin-bottom: 6px; 
-      background: #fafafa; 
-      page-break-inside: avoid;
-    }
-    
-    .pdf-table { 
-      width: 100%; 
-      border-collapse: collapse; 
-      table-layout: fixed;
-      margin-top: 4px; 
-    }
-
-    .pdf-table th, .pdf-table td { 
-      border: 1px solid #333333; 
-      padding: 6px; 
-      text-align: left !important; 
-      font-size: 11px !important; 
-      color: #111111;
-      height: 24px;
-    }
-
-    .pdf-table tr {
-      page-break-inside: avoid;
-    }
-
-    .pdf-table th { 
-      background: #f3f4f6; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      font-size: 11px !important;
-    }
-
-    .text-right { text-align: right !important; }
-  </style>
-</head>
-<body>
-
-<div class="app-card">
-  <h2 style="margin-top:0;">Service Quotation Entry</h2>
-  <button class="btn btn-secondary" onclick="fillSampleData()">⚡ Fill Sample Data</button>
-  
-  <div class="row-2">
-    <div class="form-group"><label>Date</label><input type="date" id="m-date"></div>
-    <div class="form-group"><label>Work Order #</label><input type="text" id="m-wo-num"></div>
-  </div>
-  <div class="form-group"><label>Customer #</label><input type="text" id="m-cust-num"></div>
-  <div class="form-group"><label>Customer Name</label><input type="text" id="m-cust-name"></div>
-  <div class="form-group"><label>Address</label><input type="text" id="m-address"></div>
-  <div class="row-2">
-    <div class="form-group"><label>Phone #</label><input type="tel" id="m-phone"></div>
-    <div class="form-group"><label>Fax #</label><input type="tel" id="m-fax"></div>
-  </div>
-  <div class="form-group"><label>Email</label><input type="email" id="m-email"></div>
-
-  <h2>Equipment Details</h2>
-  <div id="m-equipment-list"></div>
-  <button class="btn btn-add" onclick="addEquipmentInput()">+ Add Equipment</button>
-
-  <h2>Parts</h2>
-  <div id="m-parts-list"></div>
-  <button class="btn btn-add" onclick="addPartInput()">+ Add Part Row</button>
-
-  <h2>Labour Charges</h2>
-  <div id="m-labour-list"></div>
-  <button class="btn btn-add" onclick="addLabourInput()">+ Add Labour Row</button>
-
-  <h2>Additional Info</h2>
-  <div class="form-group"><label>Additional Comments</label><textarea id="m-comments" rows="2"></textarea></div>
-  <div class="form-group"><label>Service Tech</label><input type="text" id="m-tech"></div>
-
-  <button class="btn btn-primary" onclick="generatePDF()">Download PDF</button>
-</div>
-
-<div id="pdf-template-wrapper">
-  <div class="pdf-page" id="pdf-content">
-    
-    <table class="pdf-layout-table pdf-header">
-      <tr>
-        <td style="font-size: 16px !important; font-weight: bold; padding: 0;">SERVICE QUOTATION</td>
-        <td class="text-right" style="padding: 0;">
-          <span class="pdf-label">DATE:</span> <span class="pdf-val" id="pdf-date"></span>
-        </td>
-      </tr>
-    </table>
-
-    <table class="pdf-layout-table">
-      <tr>
-        <td colspan="2" class="pdf-line-cell">
-          <span class="pdf-label">WORK ORDER #:</span> <span class="pdf-val" id="pdf-wo-num"></span>
-        </td>
-      </tr>
-      <tr>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">CUSTOMER #:</span> <span class="pdf-val" id="pdf-cust-num"></span>
-        </td>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">CUSTOMER NAME:</span> <span class="pdf-val" id="pdf-cust-name"></span>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" class="pdf-line-cell">
-          <span class="pdf-label">ADDRESS:</span> <span class="pdf-val" id="pdf-address"></span>
-        </td>
-      </tr>
-      <tr>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">PHONE #:</span> <span class="pdf-val" id="pdf-phone"></span>
-        </td>
-        <td style="width: 50%;" class="pdf-line-cell">
-          <span class="pdf-label">FAX #:</span> <span class="pdf-val" id="pdf-fax"></span>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" class="pdf-line-cell">
-          <span class="pdf-label">EMAIL:</span> <span class="pdf-val" id="pdf-email"></span>
-        </td>
-      </tr>
-    </table>
-
-    <div class="pdf-section-head">EQUIPMENT & WORK REQUIRED</div>
-    <div id="pdf-equipment-container" style="margin-top: 4px;"></div>
-
-    <div class="pdf-section-head">PARTS</div>
-    <table class="pdf-table">
-      <thead>
-        <tr>
-          <th style="width: 25%;">PART #'S</th>
-          <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%;">QTY</th>
-          <th style="width: 18%;">PRICE</th>
-        </tr>
-      </thead>
-      <tbody id="pdf-parts-rows"></tbody>
-    </table>
-
-    <div class="pdf-section-head">LABOUR CHARGES</div>
-    <table class="pdf-table">
-      <thead>
-        <tr>
-          <th style="width: 25%;">LABOUR CHARGES</th>
-          <th style="width: 45%;">DESCRIPTION</th>
-          <th style="width: 12%;"># OF HOURS</th>
-          <th style="width: 18%;">PRICE</th>
-        </tr>
-      </thead>
-      <tbody id="pdf-labour-rows"></tbody>
-    </table>
-
-    <table class="pdf-layout-table" style="margin-top: 8px; page-break-inside: avoid;">
-      <tr>
-        <td>
-          <span class="pdf-label">ADDITIONAL COMMENTS:</span>
-          <div style="border-bottom: 1px solid #333333; min-height: 22px; margin-top: 2px;" id="pdf-comments" class="pdf-val"></div>
-        </td>
-      </tr>
-    </table>
-
-    <table class="pdf-layout-table" style="margin-top: 8px; border-top: 1px solid #333333; padding-top: 6px; page-break-inside: avoid;">
-      <tr>
-        <td style="width: 50%;"><span class="pdf-label">CUSTOMER ACCEPTED:</span> <span class="pdf-val">[ ] PLEASE CHECK IF ACCEPTED</span></td>
-        <td style="width: 50%;"><span class="pdf-label">WORK COMPLETED:</span> <span class="pdf-val">[ ]</span></td>
-      </tr>
-      <tr>
-        <td colspan="2" class="pdf-line-cell" style="padding-top: 6px;">
-          <span class="pdf-label">SERVICE TECH:</span> <span class="pdf-val" id="pdf-tech"></span>
-        </td>
-      </tr>
-    </table>
-
-  </div>
-</div>
-
-<script>
-  document.getElementById('m-date').valueAsDate = new Date();
-
-  function getSafeVal(id) {
-    const el = document.getElementById(id);
-    if (!el) return '\u00A0';
-    const val = el.value ? el.value.trim() : '';
-    return val !== '' ? val : '\u00A0';
-  }
-
-  function addEquipmentInput() {
-    const list = document.getElementById('m-equipment-list');
-    const div = document.createElement('div');
-    div.className = 'item-block';
-    div.innerHTML = `
-      <button class="btn-remove" onclick="removeEquipmentRow(this)">X</button>
-      <div class="row-2">
-        <div class="form-group"><label>Make</label><input type="text" class="inp-equip-make"></div>
-        <div class="form-group"><label>Model</label><input type="text" class="inp-equip-model"></div>
-      </div>
-      <div class="form-group"><label>Serial #</label><input type="text" class="inp-equip-serial"></div>
-      <div class="form-group"><label>Description of Service Required</label><textarea class="inp-equip-desc" rows="2"></textarea></div>
-    `;
-    list.appendChild(div);
-  }
-
-  function removeEquipmentRow(btn) {
-    const list = document.getElementById('m-equipment-list');
-    if (list.children.length > 1) {
-      btn.parentElement.remove();
-    } else {
-      alert('At least one equipment block must remain.');
-    }
-  }
-
-  function addPartInput() {
-    const div = document.createElement('div');
-    div.className = 'item-block';
-    div.innerHTML = `
-      <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-      <div class="form-group"><label>Part #</label><input type="text" class="inp-part-num"></div>
-      <div class="form-group"><label>Description</label><input type="text" class="inp-part-desc"></div>
-      <div class="row-2">
-        <div class="form-group"><label>Qty</label><input type="number" class="inp-part-qty" value="1"></div>
-        <div class="form-group"><label>Price ($)</label><input type="number" class="inp-part-price" step="0.01" placeholder="0.00"></div>
-      </div>
-    `;
-    document.getElementById('m-parts-list').appendChild(div);
-  }
-
-  function addLabourInput() {
-    const div = document.createElement('div');
-    div.className = 'item-block';
-    div.innerHTML = `
-      <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-      <div class="form-group"><label>Labour Code</label><input type="text" class="inp-labour-code"></div>
-      <div class="form-group"><label>Description</label><input type="text" class="inp-labour-desc"></div>
-      <div class="row-2">
-        <div class="form-group"><label>Hours</label><input type="number" class="inp-labour-hours" step="0.5" value="1"></div>
-        <div class="form-group"><label>Rate ($/hr)</label><input type="number" class="inp-labour-rate" step="0.01" placeholder="0.00"></div>
-      </div>
-    `;
-    document.getElementById('m-labour-list').appendChild(div);
-  }
-
-  addEquipmentInput();
-  addPartInput();
-  addLabourInput();
-
-  function fillSampleData() {
-    document.getElementById('m-wo-num').value = 'W0075009';
-    document.getElementById('m-cust-num').value = '05362';
-    document.getElementById('m-cust-name').value = 'Element Hotel';
-    document.getElementById('m-address').value = '479 Roncesvalles Avenue';
-    document.getElementById('m-phone').value = '416-889-4420';
-    document.getElementById('m-fax').value = '';
-    document.getElementById('m-email').value = '';
-
-    document.getElementById('m-equipment-list').innerHTML = '';
-    addEquipmentInput();
-    document.querySelectorAll('.inp-equip-make')[0].value = 'Maytag';
-    document.querySelectorAll('.inp-equip-model')[0].value = 'MAT14CSAWW1';
-    document.querySelectorAll('.inp-equip-serial')[0].value = 'C22560383';
-    document.querySelectorAll('.inp-equip-desc')[0].value = 'The washer needs a new motor and belt';
-
-    document.getElementById('m-parts-list').innerHTML = '';
-    addPartInput();
-    document.querySelectorAll('.inp-part-num')[0].value = 'W10210383';
-    document.querySelectorAll('.inp-part-desc')[0].value = 'Drive Motor';
-    document.querySelectorAll('.inp-part-qty')[0].value = '1';
-    document.querySelectorAll('.inp-part-price')[0].value = '145.00';
-
-    addPartInput();
-    document.querySelectorAll('.inp-part-num')[1].value = 'W10006384';
-    document.querySelectorAll('.inp-part-desc')[1].value = 'Drive Belt';
-    document.querySelectorAll('.inp-part-qty')[1].value = '1';
-    document.querySelectorAll('.inp-part-price')[1].value = '28.50';
-
-    document.getElementById('m-labour-list').innerHTML = '';
-    addLabourInput();
-    document.querySelectorAll('.inp-labour-code')[0].value = 'LAB-01';
-    document.querySelectorAll('.inp-labour-desc')[0].value = 'Onsite Service';
-    document.querySelectorAll('.inp-labour-hours')[0].value = '1.5';
-    document.querySelectorAll('.inp-labour-rate')[0].value = '85.00';
-
-    document.getElementById('m-comments').value = 'Parts on order.';
-    document.getElementById('m-tech').value = 'Carlos M.';
-  }
-
-  async function generatePDF() {
-    document.getElementById('pdf-date').innerText = getSafeVal('m-date');
-    document.getElementById('pdf-wo-num').innerText = getSafeVal('m-wo-num');
-    document.getElementById('pdf-cust-num').innerText = getSafeVal('m-cust-num');
-    document.getElementById('pdf-cust-name').innerText = getSafeVal('m-cust-name');
-    document.getElementById('pdf-address').innerText = getSafeVal('m-address');
-    document.getElementById('pdf-phone').innerText = getSafeVal('m-phone');
-    document.getElementById('pdf-fax').innerText = getSafeVal('m-fax');
-    document.getElementById('pdf-email').innerText = getSafeVal('m-email');
-    document.getElementById('pdf-comments').innerText = getSafeVal('m-comments');
-    document.getElementById('pdf-tech').innerText = getSafeVal('m-tech');
-
-    const equipContainer = document.getElementById('pdf-equipment-container');
-    equipContainer.innerHTML = '';
-    const makes = document.querySelectorAll('.inp-equip-make');
-    const models = document.querySelectorAll('.inp-equip-model');
-    const serials = document.querySelectorAll('.inp-equip-serial');
-    const descs = document.querySelectorAll('.inp-equip-desc');
-
-    if (makes.length === 0) {
-      equipContainer.innerHTML = `
-        <div class="pdf-equip-block">
-          <table class="pdf-layout-table" style="margin-bottom:0;">
-            <tr>
-              <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MAKE:</span> <span class="pdf-val">&nbsp;</span></td>
-              <td style="width: 50%;" class="pdf-line-cell"><span class="pdf-label">MODEL:</span> <span class="pdf-val">&nbsp;</span></td>
-            </tr>
-            <tr>
-              <td colspan="2" class="pdf-line-cell"><span class="pdf-label">SERIAL #:</span> <span class="pdf-val">&nbsp;</span></td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top: 4px;"><span class="pdf-label">WORK REQUIRED:</span> <div class="pdf-val" style="padding-left: 2px; margin-top: 2px;">&nbsp;</div></td>
-            </tr>
-          </table>
-        </div>`;
-    } else {
-      makes.forEach((_, i) => {
-        const makeVal = makes[i].value ? makes[i].value.trim() : '\u00A0';
-        const modelVal = models[i].value ? models[i].value.trim() : '\u00A0';
-        const serialVal = serials[i].value ? serials[i].value.trim() : '\u00A0';
-        const descVal = descs[i].value ? descs[i].value.trim() : '\u00A0';
-
-        const block = document.createElement('div');
-        block.className = 'pdf-equip-block';
-        block.innerHTML = `
-          <table class="pdf-layout-table" style="margin-bottom:0;">
-            <tr>
-              <td style="width: 50%;" class="pdf-line-cell">
-                <span class="pdf-label">MAKE:</span> <span class="pdf-val">${makeVal}</span>
-              </td>
-              <td style="width: 50%;" class="pdf-line-cell">
-                <span class="pdf-label">MODEL:</span> <span class="pdf-val">${modelVal}</span>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" class="pdf-line-cell">
-                <span class="pdf-label">SERIAL #:</span> <span class="pdf-val">${serialVal}</span>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top: 4px;">
-                <span class="pdf-label">WORK REQUIRED:</span>
-                <div class="pdf-val" style="padding-left: 2px; margin-top: 2px;">${descVal}</div>
-              </td>
-            </tr>
-          </table>
-        `;
-        equipContainer.appendChild(block);
-      });
-    }
-
-    const partsTbody = document.getElementById('pdf-parts-rows');
-    partsTbody.innerHTML = '';
-    const partNums = document.querySelectorAll('.inp-part-num');
-    const partDescs = document.querySelectorAll('.inp-part-desc');
-    const partQtys = document.querySelectorAll('.inp-part-qty');
-    const partPrices = document.querySelectorAll('.inp-part-price');
-
-    if (partNums.length === 0) {
-      partsTbody.innerHTML = `
-        <tr>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>`;
-    } else {
-      partNums.forEach((_, i) => {
-        const numVal = partNums[i].value ? partNums[i].value.trim() : '\u00A0';
-        const descVal = partDescs[i].value ? partDescs[i].value.trim() : '\u00A0';
-        const rawQty = partQtys[i].value;
-        const rawPrice = partPrices[i].value;
-        
-        const qtyVal = rawQty !== '' ? rawQty : '\u00A0';
-        const priceVal = rawPrice !== '' ? `$${parseFloat(rawPrice).toFixed(2)}` : '\u00A0';
-
-        partsTbody.innerHTML += `
-          <tr>
-            <td>${numVal}</td>
-            <td>${descVal}</td>
-            <td>${qtyVal}</td>
-            <td>${priceVal}</td>
-          </tr>
-        `;
-      });
-    }
-
-    const labourTbody = document.getElementById('pdf-labour-rows');
-    labourTbody.innerHTML = '';
-    const labourCodes = document.querySelectorAll('.inp-labour-code');
-    const labourDescs = document.querySelectorAll('.inp-labour-desc');
-    const labourHours = document.querySelectorAll('.inp-labour-hours');
-    const labourRates = document.querySelectorAll('.inp-labour-rate');
-
-    if (labourCodes.length === 0) {
-      labourTbody.innerHTML = `
-        <tr>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>`;
-    } else {
-      labourCodes.forEach((_, i) => {
-        const codeVal = labourCodes[i].value ? labourCodes[i].value.trim() : '\u00A0';
-        const descVal = labourDescs[i].value ? labourDescs[i].value.trim() : '\u00A0';
-        const rawHrs = labourHours[i].value;
-        const rawRate = labourRates[i].value;
-
-        const hrsVal = rawHrs !== '' ? rawHrs : '\u00A0';
-        const rateVal = rawRate !== '' ? `$${parseFloat(rawRate).toFixed(2)}` : '\u00A0';
-
-        labourTbody.innerHTML += `
-          <tr>
-            <td>${codeVal}</td>
-            <td>${descVal}</td>
-            <td>${hrsVal}</td>
-            <td>${rateVal}</td>
-          </tr>
-        `;
-      });
-    }
-
-    const wrapper = document.getElementById('pdf-template-wrapper');
-    const element = document.getElementById('pdf-content');
-
-    wrapper.style.left = '0px';
-    wrapper.style.top = '0px';
-    wrapper.style.position = 'fixed';
-    wrapper.style.zIndex = '99999';
-
-    const fullHeight = element.scrollHeight;
-
-    const opt = {
-      margin:       [0.2, 0.2, 0.2, 0.2],
-      filename:     `Quotation_${document.getElementById('m-wo-num').value || 'Draft'}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { 
-        scale: 2, 
-        scrollX: 0, 
-        scrollY: 0,
-        windowWidth: 750,
-        height: fullHeight,
-        useCORS: true,
-        letterRendering: true
-      },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-
-    try {
-      await html2pdf().set(opt).from(element).save();
-    } finally {
-      wrapper.style.left = '-9999px';
-      wrapper.style.position = 'absolute';
-      wrapper.style.zIndex = 'auto';
-    }
-  }
+try {
+await html2pdf().set(opt).from(element).save();
+} finally {
+wrapper.style.left = '-9999px';
+wrapper.style.position = 'absolute';
+wrapper.style.zIndex = 'auto';
+}
+}
 </script>
 </body>
 </html>
