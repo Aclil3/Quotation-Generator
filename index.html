@@ -457,15 +457,17 @@
     document.getElementById('m-email').value = '';
 
     document.getElementById('m-equipment-list').innerHTML = '';
+
+    // Equipment 1
     addEquipmentInput();
-    
     const equip1 = document.querySelectorAll('.equipment-card')[0];
     equip1.querySelector('.inp-equip-make').value = 'Maytag';
     equip1.querySelector('.inp-equip-model').value = 'MAT14CSAWW1';
     equip1.querySelector('.inp-equip-serial').value = 'C22560383';
-    equip1.querySelector('.inp-equip-desc').value = 'The washer needs a new motor and belt';
+    equip1.querySelector('.inp-equip-desc').value = 'Washer motor failing under load and belt slipping';
 
     const addPartBtn1 = equip1.querySelector('.btn-add-sm');
+    addPartToEquipment(addPartBtn1);
     addPartToEquipment(addPartBtn1);
     addPartToEquipment(addPartBtn1);
 
@@ -480,14 +482,49 @@
     parts1[1].querySelector('.inp-part-qty').value = '1';
     parts1[1].querySelector('.inp-part-price').value = '28.50';
 
+    parts1[2].querySelector('.inp-part-num').value = '22003441';
+    parts1[2].querySelector('.inp-part-desc').value = 'Water Inlet Valve';
+    parts1[2].querySelector('.inp-part-qty').value = '1';
+    parts1[2].querySelector('.inp-part-price').value = '42.00';
+
+    // Equipment 2
+    addEquipmentInput();
+    const equip2 = document.querySelectorAll('.equipment-card')[1];
+    equip2.querySelector('.inp-equip-make').value = 'Maytag';
+    equip2.querySelector('.inp-equip-model').value = 'MDG18MNAGW';
+    equip2.querySelector('.inp-equip-serial').value = 'D88401923';
+    equip2.querySelector('.inp-equip-desc').value = 'Dryer not heating and producing squeaking noise during cycle';
+
+    const addPartBtn2 = equip2.querySelector('.btn-add-sm');
+    addPartToEquipment(addPartBtn2);
+    addPartToEquipment(addPartBtn2);
+    addPartToEquipment(addPartBtn2);
+
+    const parts2 = equip2.querySelectorAll('.part-card');
+    parts2[0].querySelector('.inp-part-num').value = '33002795';
+    parts2[0].querySelector('.inp-part-desc').value = 'Igniter Assembly';
+    parts2[0].querySelector('.inp-part-qty').value = '1';
+    parts2[0].querySelector('.inp-part-price').value = '38.00';
+
+    parts2[1].querySelector('.inp-part-num').value = '303373K';
+    parts2[1].querySelector('.inp-part-desc').value = 'Drum Roller Kit';
+    parts2[1].querySelector('.inp-part-qty').value = '2';
+    parts2[1].querySelector('.inp-part-price').value = '18.25';
+
+    parts2[2].querySelector('.inp-part-num').value = '33002535';
+    parts2[2].querySelector('.inp-part-desc').value = 'Thermostat Cycling';
+    parts2[2].querySelector('.inp-part-qty').value = '1';
+    parts2[2].querySelector('.inp-part-price').value = '24.50';
+
+    // Labour
     document.getElementById('m-labour-list').innerHTML = '';
     addLabourInput();
     document.querySelectorAll('.inp-labour-code')[0].value = 'LAB-01';
-    document.querySelectorAll('.inp-labour-desc')[0].value = 'Onsite Service';
-    document.querySelectorAll('.inp-labour-hours')[0].value = '1.5';
+    document.querySelectorAll('.inp-labour-desc')[0].value = 'Onsite Service & Diagnostics';
+    document.querySelectorAll('.inp-labour-hours')[0].value = '2.5';
     document.querySelectorAll('.inp-labour-rate')[0].value = '85.00';
 
-    document.getElementById('m-comments').value = 'Parts on order.';
+    document.getElementById('m-comments').value = 'All components ordered and scheduled for installation upon delivery.';
     document.getElementById('m-tech').value = 'Carlos M.';
   }
 
